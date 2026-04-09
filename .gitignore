@@ -12,3 +12,7 @@
 *.la
 *.a
 destiny
+
+# generated files
+destiny
+*.dep
