@@ -1,0 +1,616 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage{minted}
+\usepackage{xcolor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+\title{Midterm Progress Report\\[1em]
+\large Defect Analysis, Repair, and Python-Port Preparation for the DESTINY Emerging Memory Modeling Tool}
+\author{Tiebing Tang 42382277\\ \quad Yishu Wang 66987866 \\ \quad Zhenyu Liu 41689752}
+\date{\today}
+
+\begin{document}
+\maketitle
+\onehalfspacing
+
+\section{Project Background}
+
+Emerging memory technologies such as STT-RAM, ReRAM, PCRAM, and eDRAM are increasingly important in architecture research. Their latency, dynamic energy, leakage power, and area tradeoffs strongly influence cache and memory hierarchy design. Because silicon prototyping is expensive and slow, early-stage evaluation relies heavily on analytical modeling tools.
+
+DESTINY is a representative academic simulator for SRAM, eDRAM, and several non-volatile memories in both 2D and 3D organizations. It is therefore a valuable baseline for design-space exploration. However, research tools of this kind often accumulate historical assumptions, incomplete features, and mismatches between documentation and implementation. These issues can reduce output credibility and make later extensions more difficult.
+
+The broader goal of this project is to study DESTINY in depth, identify correctness and reproducibility problems, repair high-impact defects, and prepare the codebase for a future Pythonic port. The Python version is intended to make the model easier to maintain, easier to integrate with data-analysis workflows, and easier to extend for new memory technologies.
+
+\section{Project Objectives}
+
+The project has three main objectives:
+
+\begin{enumerate}[leftmargin=1.5em]
+    \item Understand the internal structure of DESTINY, including configuration parsing, device/cell modeling, array hierarchy modeling, and result aggregation.
+    \item Identify and repair defects that materially affect correctness, robustness, or reproducibility.
+    \item Prepare the conceptual foundation for a Python-based reimplementation by clarifying the simulator's data flow and exposing legacy inconsistencies early.
+\end{enumerate}
+
+\section{Development Environment and Tools}
+
+The project is developed and evaluated under the following software environment and toolchain:
+
+\begin{itemize}
+    \item \textbf{Operating System:} Ubuntu 22.04.2 LTS running on WSL2
+    \item \textbf{Build System:} GNU Make 4.3
+    \item \textbf{Version Control:} Git 2.34.1
+    \item \textbf{Modeling Framework:} DESTINY (C++ implementation)
+\end{itemize}
+
+The DESTINY simulator used in this project is available at:
+\begin{itemize}
+    \item \url{https://github.com/sparsh0mittal/destiny_3d_cache}
+\end{itemize}
+
+The project repository can be found at:
+\begin{itemize}
+    \item \url{https://github.com/Yuchen-10001/ESE5760_final}
+\end{itemize}
+
+\section{Work Completed So Far}
+
+\subsection{Environment Setup}
+
+The local build and execution environment has been successfully set up on Windows using MSYS2. The repaired codebase has been compiled with GNU \texttt{g++} and executed on bundled sample configurations.
+
+The DESTINY framework is compiled using a Makefile provided in the original repository:
+
+\begin{minted}[fontsize=\small, bgcolor=white, style=monokai]{bash}
+make
+\end{minted}
+
+\subsection{Codebase Exploration}
+
+The key modules of the simulator have been inspected and mapped:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \texttt{main.cpp}: top-level flow, technology initialization, search orchestration, and summary output.
+    \item \texttt{InputParameter.cpp}: configuration parsing for architectural and technology options.
+    \item \texttt{MemCell.cpp}: memory-cell parameter parsing and device-level read/write energy logic.
+    \item \texttt{SubArray.cpp}: subarray-level latency and power modeling.
+    \item \texttt{Result.cpp}: final reporting and decomposition of latency/energy/area.
+    \item \texttt{BankWithHtree.cpp} and \texttt{BankWithoutHtree.cpp}: bank-level hierarchy and routing contributions.
+\end{itemize}
+
+This exploration phase established the full path from configuration input to final reported metrics and made it possible to trace suspicious outputs back to their source formulas.
+
+\section{Defects Identified}
+
+During the audit, several issues with direct impact on correctness or usability were identified.
+
+\subsection{Unsupported Process Nodes Caused Undefined Behavior}
+
+The original code accepted \texttt{ProcessNode} values outside the supported 22\,nm to 200\,nm range. It then fell through placeholder \texttt{TODO} branches and still performed technology interpolation with an invalid or uninitialized \texttt{techHigh} state.
+
+\textbf{Impact:} results outside the supported process range were not merely approximate; they were undefined.
+
+\subsection{Non-Power-of-Two Associativity Did Not Stop Execution}
+
+The simulator printed an error for invalid cache associativity, but the terminating \texttt{exit(-1)} was commented out.
+
+\textbf{Impact:} the program could continue with invalid cache geometry assumptions and still produce misleading output.
+
+\subsection{The Dedicated eDRAM Technology Path Was Disabled}
+
+The code contained conditions of the form:
+
+\begin{verbatim}
+if (cell->memCellType == eDRAM && false)
+\end{verbatim}
+
+which permanently disabled the intended eDRAM-specific technology initialization.
+
+\textbf{Impact:} eDRAM modeling silently fell back to a more generic peripheral-technology path.
+
+\subsection{\texttt{ReadEnergy} Inputs Were Ignored}
+
+The bundled \texttt{sample\_RRAM.cell} file specifies:
+
+\begin{verbatim}
+-ReadEnergy (pJ): 0.1
+\end{verbatim}
+
+but the parser only recognized \texttt{-ReadPower (uW)}.
+
+\textbf{Impact:} a valid user-specified energy input was silently ignored, and the simulator reverted to a derived-power path instead.
+
+\subsection{Derived Read Power Could Become Negative}
+
+In the current-sensing path for memristor-style cells, the original code computed read current using:
+
+\begin{verbatim}
+(readVoltage - voltageDropAccessDevice) / resistanceOn
+\end{verbatim}
+
+For the bundled ReRAM sample, \texttt{ReadVoltage = 0.3V} and \texttt{VoltageDropAccessDevice = 1.8V}, making the effective read voltage negative.
+
+\textbf{Impact:} negative read current propagated into negative read power and eventually into physically impossible negative read-energy terms.
+
+\subsection{The \texttt{SetVoltage} Parser Contained a Copy/Paste Bug}
+
+The \texttt{-SetVoltage} parsing branch reused the \texttt{-ResetVoltage} format string and could write to the wrong variable.
+
+\textbf{Impact:} configurations using \texttt{SetVoltage} could be parsed incorrectly.
+
+\subsection{Documentation and Implementation Used Different Parameter Names}
+
+The README used \texttt{AllowDifferenceTagTech}, while the parser expected \texttt{AllowDifferentTagTech}.
+
+\textbf{Impact:} a user could follow the documentation correctly and still fail to enable the intended feature.
+
+\section{Repairs Implemented}
+
+At this stage, the highest-impact issues have been repaired directly in the code.
+
+\subsection{Added Strict Process-Node Validation}
+
+The simulator now terminates immediately if \texttt{ProcessNode} is outside the supported 22\,nm to 200\,nm range.
+
+\textbf{Result:} invalid technology inputs are now rejected early instead of entering undefined behavior.
+
+\subsection{Restored Hard Failure for Invalid Associativity}
+
+The commented-out termination logic for non-power-of-two associativity has been restored.
+
+\textbf{Result:} invalid cache configurations no longer produce apparently valid outputs.
+
+\subsection{Re-enabled the eDRAM-Specific Technology Path}
+
+The hardcoded \texttt{\&\& false} conditions were removed so that eDRAM can use its intended dedicated technology initialization path.
+
+\textbf{Result:} the eDRAM path is now consistent with the original modeling intent.
+
+\subsection{Added Support for \texttt{ReadEnergy}}
+
+A \texttt{readEnergy} field was added to the memory-cell data structure, and the parser now correctly reads:
+
+\begin{verbatim}
+-ReadEnergy (pJ)
+\end{verbatim}
+
+\textbf{Result:} explicit read-energy inputs are now honored.
+
+\subsection{Corrected Cell Read-Energy Selection Logic}
+
+The subarray-level energy path now prefers explicit \texttt{readEnergy} when provided. Only if no explicit energy is given does the simulator fall back to a derived read-power path.
+
+\textbf{Result:} user-provided data is no longer silently ignored.
+
+\subsection{Prevented Negative Derived Read Power}
+
+The read-power estimation function was revised so that:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item it uses the object's own \texttt{readMode} field rather than a global pointer,
+    \item the effective read voltage is clamped to a non-negative value,
+    \item explicit \texttt{readPower} is returned directly when available.
+\end{itemize}
+
+\textbf{Result:} negative power and negative energy artifacts are eliminated from this path.
+
+\subsection{Fixed the \texttt{SetVoltage} Parser}
+
+The parser was corrected so that \texttt{SetVoltage} is read from the proper line and written to the correct variable.
+
+\subsection{Aligned Documentation and Parser Support}
+
+The parser now accepts both:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \texttt{AllowDifferentTagTech}
+    \item \texttt{AllowDifferenceTagTech}
+\end{itemize}
+
+and the README was updated for consistency.
+
+\section{Experimental Validation}
+
+To verify that the repairs changed simulator behavior in meaningful ways, several representative runs were performed.
+
+\subsection{Validation Case 1: Bundled 3D ReRAM Sample}
+
+Command:
+
+\begin{verbatim}
+cd C:\Users\18101\ESE5760_final\config
+..\destiny.exe sample_3DReRAM.cfg
+\end{verbatim}
+
+\subsubsection*{Before Repair}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item Read Dynamic Energy: 150.509\,pJ
+    \item Bitline \& Cell Read Energy: $-0.035$\,pJ
+\end{itemize}
+
+The negative energy term is physically invalid.
+
+\subsubsection*{After Repair}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item Read Dynamic Energy: 157.047\,pJ
+    \item Bitline \& Cell Read Energy: 1.600\,pJ
+\end{itemize}
+
+\subsubsection*{Interpretation}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item The negative read-energy artifact was removed.
+    \item Total read dynamic energy increased by 6.538\,pJ.
+    \item This corresponds to an increase of approximately 4.34\%.
+\end{itemize}
+
+This is the strongest quantitative indication so far that the repaired code is more physically consistent than the original baseline.
+
+\subsection{Validation Case 2: Bundled STTRAM Cache Sample}
+
+Command:
+
+\begin{verbatim}
+cd C:\Users\18101\ESE5760_final\config
+..\destiny.exe sample_STTRAM.cfg
+\end{verbatim}
+
+Observed key results:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \texttt{numSolutions = 242209 / numDesigns = 13977846}
+    \item Cache Hit Latency: 4.927\,ns
+    \item Cache Miss Latency: 3.748\,ns
+    \item Cache Write Latency: 6.596\,ns
+    \item Cache Hit Dynamic Energy: 0.435\,nJ/access
+    \item Cache Miss Dynamic Energy: 0.435\,nJ/access
+    \item Cache Write Dynamic Energy: 0.188\,nJ/access
+    \item Cache Total Leakage Power: 2538.913\,mW
+\end{itemize}
+
+\textbf{Interpretation:} the repair work did not destabilize the main STTRAM cache flow. This is an important regression check because it shows that the changes were targeted rather than disruptive.
+
+\subsection{Validation Case 3: Invalid Process Node}
+
+A dedicated stress-test configuration was added:
+
+\begin{verbatim}
+config/test_invalid_node.cfg
+\end{verbatim}
+
+Observed result:
+
+\begin{verbatim}
+[ERROR] Process node 14nm is outside the supported DESTINY
+range of 22nm to 200nm.
+\end{verbatim}
+
+\textbf{Interpretation:} the simulator now fails fast for unsupported technology inputs.
+
+\subsection{Validation Case 4: Invalid Associativity}
+
+A second stress-test configuration was added:
+
+\begin{verbatim}
+config/test_invalid_assoc.cfg
+\end{verbatim}
+
+Observed result:
+
+\begin{verbatim}
+[ERROR] The associativity value has to be a power of 2
+in this version
+\end{verbatim}
+
+\textbf{Interpretation:} illegal cache geometry inputs are now rejected instead of producing misleading output.
+
+\section{Current Project Progress}
+
+At the midterm stage, the project has already moved beyond environment setup and code reading. The following concrete progress has been achieved:
+
+\begin{enumerate}[leftmargin=1.5em]
+    \item The simulator can now be compiled and executed locally.
+    \item The main architecture of the codebase has been analyzed.
+    \item Several high-impact defects affecting correctness and reproducibility have been identified.
+    \item A first repair pass has been implemented and validated.
+    \item At least one repaired issue produced a clear quantitative change in final reported metrics.
+\end{enumerate}
+
+This means the project has already transitioned from a purely exploratory phase to an active model-improvement phase.
+
+\section{Remaining Limitations}
+
+Although the current repair pass addressed several major issues, some known limitations remain:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item Cache miss energy is still treated approximately in the original code.
+    \item The pruning and \texttt{doublePrune} paths are still incomplete.
+    \item Some TSV decomposition formulas are still flagged by the original authors as needing revision.
+    \item Bundled sample configurations still depend on execution from the \texttt{config} directory due to relative cell-file paths.
+\end{itemize}
+
+These issues are important targets for the next phase.
+
+\section{Next-Phase Plan}
+
+The next phase of the project will focus on both model reliability and migration readiness.
+
+\subsection{Further Simulator Repairs}
+
+The next repair targets are:
+
+\begin{enumerate}[leftmargin=1.5em]
+    \item refining cache miss energy so that partial data-array activation is modeled more explicitly,
+    \item completing or removing unfinished pruning logic,
+    \item auditing TSV formulas against the original DESTINY publication and technical report,
+    \item improving path handling for sample configurations.
+\end{enumerate}
+
+\subsection{Regression Testing}
+
+A lightweight regression suite will be added to check:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item that no negative dynamic-energy components appear,
+    \item that invalid inputs fail fast,
+    \item that bundled sample outputs remain stable after changes.
+\end{itemize}
+
+
+
+\section{Conclusion}
+
+At this midterm point, the project has successfully progressed from setup and exploration into concrete simulator improvement. The work completed so far has already produced measurable and reproducible benefits. In particular, the repaired ReRAM sample no longer reports physically impossible negative read energy, and the total read dynamic energy changed by approximately 4.34\% after the fix.
+
+These results demonstrate that the project is producing substantive technical progress rather than only descriptive analysis. The current codebase is now in a significantly better state for continued correctness work and for the eventual Pythonic port.
+
+
+\appendix
+\section{Sample Output (SRAM 4-Layer Configuration)}
+
+The following appendix shows a representative execution output from DESTINY simulator. The cfg file is given by \texttt{sample\_SRAM\_4layer.cfg}.
+
+\begin{minted}[fontsize=\footnotesize, breaklines, frame=lines]{text}
+User-defined configuration file (sample_SRAM_4layer.cfg) is loaded
+
+
+====================
+DESIGN SPECIFICATION
+====================
+Design Target: Cache
+Capacity   : 2MB
+Cache Line Size: 32Bytes
+Cache Associativity: 1 Ways
+
+Searching for the best solution that is optimized for write energy-delay-product ...
+Using cell file: sample_SRAM.cell
+numSolutions = 413701 / numDesigns = 13977846
+
+=======================
+CACHE DESIGN -- SUMMARY
+=======================
+Access Mode: Normal
+Area:
+ - Total Area = 8.669mm^2
+ |--- Data Array Area = 3449.472um x 2070.312um = 7.154mm^2
+ |--- Tag Array Area  = 2170.683um x 697.013um = 1.515mm^2
+Timing:
+ - Cache Hit Latency   = 0.637ns
+ - Cache Miss Latency  = 0.316ns
+ - Cache Write Latency = 0.380ns
+Power:
+ - Cache Hit Dynamic Energy   = 0.354nJ per access
+ - Cache Miss Dynamic Energy  = 0.354nJ per access
+ - Cache Write Dynamic Energy = 0.354nJ per access
+ - Cache Total Leakage Power  = 232.393mW
+ |--- Cache Data Array Leakage Power = 183.759mW
+ |--- Cache Tag Array Leakage Power  = 48.633mW
+
+CACHE DATA ARRAY DETAILS    
+    =============
+       SUMMARY   
+    =============
+    Optimized for: Write Energy-Delay-Product
+    Memory Cell: SRAM
+    Cell Area (F^2)    : 146.000 (14.600Fx10.000F)
+    Cell Aspect Ratio  : 1.460
+    SRAM Cell Access Transistor Width: 1.310F
+    SRAM Cell NMOS Width: 2.080F
+    SRAM Cell PMOS Width: 1.230F
+    
+    =============
+    CONFIGURATION
+    =============
+    Bank Organization: 128 x 32 x 4
+     - Row Activation   : 1 / 128 x 1
+     - Column Activation: 2 / 32 x 1
+    Mat Organization: 2 x 2
+     - Row Activation   : 2 / 2
+     - Column Activation: 2 / 2
+     - Subarray Size    : 8 Rows x 32 Columns
+    Mux Level:
+     - Senseamp Mux      : 1
+     - Output Level-1 Mux: 1
+     - Output Level-2 Mux: 1
+     - One set is partitioned into 1 rows
+    Local Wire:
+     - Wire Type :     Local Aggressive
+     - Repeater Type:     No Repeaters
+     - Low Swing :     No
+    Global Wire:
+     - Wire Type :     Global Aggressive
+     - Repeater Type:     No Repeaters
+     - Low Swing :     No
+    Buffer Design Style:     Latency-Optimized
+    =============
+       RESULT
+    =============
+    Area:
+     - Total Area = 3.449mm x 2.070mm = 7.154mm^2
+     |--- Mat Area      = 26.949um x 64.697um = 1743.526um^2   (144.914%)
+     |--- Subarray Area = 13.474um x 22.666um = 305.415um^2   (206.818%)
+     |--- TSV Area      = 102425.000um^2
+     |--- Logic Layer Area = 77915.487um^2
+     - Area Efficiency = 144.654%
+    Timing:
+     -  Read Latency = 502.084ps
+     |--- TSV Latency    = 0.213ps
+     |--- H-Tree Latency = 243.721ps
+     |--- Mat Latency    = 258.149ps
+        |--- Predecoder Latency = 127.005ps
+        |--- Subarray Latency   = 131.144ps
+           |--- Row Decoder Latency = 83.664ps
+           |--- Bitline Latency     = 40.725ps
+           |--- Senseamp Latency    = 6.755ps
+           |--- Mux Latency         = 0.000ps
+           |--- Precharge Latency   = 37.665ps
+     - Write Latency = 380.117ps
+     |--- TSV Latency    = 0.107ps
+     |--- H-Tree Latency = 121.861ps
+     |--- Mat Latency    = 258.149ps
+        |--- Predecoder Latency = 127.005ps
+        |--- Subarray Latency   = 131.144ps
+           |--- Row Decoder Latency = 83.664ps
+           |--- Charge Latency      = 0.010ps
+     - Read Bandwidth  = 375.828GB/s
+     - Write Bandwidth = 244.006GB/s
+    Power:
+     -  Read Dynamic Energy = 321.259pJ
+     |--- TSV Dynamic Energy    = 115.954pJ
+     |--- H-Tree Dynamic Energy = 198.679pJ
+     |--- Mat Dynamic Energy    = 6.897pJ per mat
+        |--- Predecoder Dynamic Energy = 6.334pJ
+        |--- Subarray Dynamic Energy   = 0.141pJ per active subarray
+           |--- Row Decoder Dynamic Energy = 0.010pJ
+           |--- Mux Decoder Dynamic Energy = 0.022pJ
+           |--- Senseamp Dynamic Energy    = 0.041pJ
+           |--- Mux Dynamic Energy         = 0.000pJ
+           |--- Precharge Dynamic Energy   = 0.054pJ
+     - Write Dynamic Energy = 320.498pJ
+     |--- TSV Dynamic Energy    = 108.786pJ
+     |--- H-Tree Dynamic Energy = 198.679pJ
+     |--- Mat Dynamic Energy    = 6.517pJ per mat
+        |--- Predecoder Dynamic Energy = 6.334pJ
+        |--- Subarray Dynamic Energy   = 0.046pJ per active subarray
+           |--- Row Decoder Dynamic Energy = 0.010pJ
+           |--- Mux Decoder Dynamic Energy = 0.022pJ
+           |--- Mux Dynamic Energy         = 0.000pJ
+     - Leakage Power = 183.759mW
+     |--- TSV Leakage              = 0.000pW
+     |--- H-Tree Leakage Power     = 0.000pW
+     |--- Mat Leakage Power        = 11.216uW per mat
+
+CACHE TAG ARRAY DETAILS    
+    =============
+       SUMMARY   
+    =============
+    Optimized for: Write Energy-Delay-Product
+    Memory Cell: SRAM
+    Cell Area (F^2)    : 146.000 (14.600Fx10.000F)
+    Cell Aspect Ratio  : 1.460
+    SRAM Cell Access Transistor Width: 1.310F
+    SRAM Cell NMOS Width: 2.080F
+    SRAM Cell PMOS Width: 1.230F
+    
+    =============
+    CONFIGURATION
+    =============
+    Bank Organization: 64 x 64 x 4
+     - Row Activation   : 1 / 64 x 1
+     - Column Activation: 1 / 64 x 1
+    Mat Organization: 2 x 1
+     - Row Activation   : 2 / 2
+     - Column Activation: 1 / 1
+     - Subarray Size    : 4 Rows x 15 Columns
+    Mux Level:
+     - Senseamp Mux      : 1
+     - Output Level-1 Mux: 1
+     - Output Level-2 Mux: 1
+     - One set is partitioned into 1 rows
+    Local Wire:
+     - Wire Type :     Local Conservative
+     - Repeater Type:     No Repeaters
+     - Low Swing :     No
+    Global Wire:
+     - Wire Type :     Global Aggressive
+     - Repeater Type:     No Repeaters
+     - Low Swing :     No
+    Buffer Design Style:     Latency-Optimized
+    =============
+       RESULT
+    =============
+    Area:
+     - Total Area = 2.171mm x 697.013um = 1.515mm^2
+     |--- Mat Area      = 33.917um x 10.891um = 369.383um^2   (80.157%)
+     |--- Subarray Area = 8.667um x 10.891um = 94.390um^2   (156.843%)
+     |--- TSV Area      = 102425.000um^2
+     |--- Logic Layer Area = 254437.074um^2
+     - Area Efficiency = 80.075%
+    Timing:
+     -  Read Latency = 315.836ps
+     |--- TSV Latency    = 0.213ps
+     |--- H-Tree Latency = 55.867ps
+     |--- Mat Latency    = 259.755ps
+        |--- Predecoder Latency = 79.710ps
+        |--- Subarray Latency   = 87.549ps
+           |--- Row Decoder Latency = 57.406ps
+           |--- Bitline Latency     = 23.386ps
+           |--- Senseamp Latency    = 6.757ps
+           |--- Mux Latency         = 0.000ps
+           |--- Precharge Latency   = 25.289ps
+        |--- Comparator Latency  = 92.496ps
+     - Write Latency = 195.299ps
+     |--- TSV Latency    = 0.107ps
+     |--- H-Tree Latency = 27.934ps
+     |--- Mat Latency    = 167.259ps
+        |--- Predecoder Latency = 79.710ps
+        |--- Subarray Latency   = 87.549ps
+           |--- Row Decoder Latency = 57.406ps
+           |--- Charge Latency      = 0.004ps
+     - Read Bandwidth  = 67.651GB/s
+     - Write Bandwidth = 42.833GB/s
+    Power:
+     -  Read Dynamic Energy = 33.096pJ
+     |--- TSV Dynamic Energy    = 18.974pJ
+     |--- H-Tree Dynamic Energy = 14.744pJ
+     |--- Mat Dynamic Energy    = 4.859pJ per mat
+        |--- Predecoder Dynamic Energy = 4.742pJ
+        |--- Subarray Dynamic Energy   = 0.059pJ per active subarray
+           |--- Row Decoder Dynamic Energy = 0.005pJ
+           |--- Mux Decoder Dynamic Energy = 0.010pJ
+           |--- Senseamp Dynamic Energy    = 0.019pJ
+           |--- Mux Dynamic Energy         = 0.000pJ
+           |--- Precharge Dynamic Energy   = 0.021pJ
+     - Write Dynamic Energy = 33.015pJ
+     |--- TSV Dynamic Energy    = 13.493pJ
+     |--- H-Tree Dynamic Energy = 14.744pJ
+     |--- Mat Dynamic Energy    = 4.778pJ per mat
+        |--- Predecoder Dynamic Energy = 4.742pJ
+        |--- Subarray Dynamic Energy   = 0.018pJ per active subarray
+           |--- Row Decoder Dynamic Energy = 0.005pJ
+           |--- Mux Decoder Dynamic Energy = 0.010pJ
+           |--- Mux Dynamic Energy         = 0.000pJ
+     - Leakage Power = 48.633mW
+     |--- TSV Leakage              = 0.000pW
+     |--- H-Tree Leakage Power     = 0.000pW
+     |--- Mat Leakage Power        = 2.968uW per mat
+
+Finished!
+
+\end{minted}
+
+\end{document}

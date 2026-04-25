@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ESE 5760 Final Project Poster (Draft)</title>
+    <style>
+      :root{
+        --bg:#ffffff;
+        --ink:#0f172a;
+        --muted:#334155;
+        --line:#e2e8f0;
+        --accent:#2563eb;
+      }
+      html,body{height:100%; background:var(--bg); color:var(--ink); font:14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;}
+      body{margin:0;}
+      .page{
+        width: 44in;
+        height: 33in;
+        box-sizing: border-box;
+        padding: 0.9in;
+      }
+      .header{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-end;
+        border-bottom: 2px solid var(--line);
+        padding-bottom: 0.25in;
+        margin-bottom: 0.35in;
+      }
+      .title{
+        font-size: 44px;
+        font-weight: 750;
+        letter-spacing: 0px;
+        margin:0;
+      }
+      .subtitle{
+        margin: 0.12in 0 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+      .authors{
+        text-align:right;
+        color: var(--muted);
+        font-size: 18px;
+        white-space:nowrap;
+      }
+      .grid{
+        display:grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.35in;
+        height: calc(100% - 1.4in);
+      }
+      .col{
+        display:flex;
+        flex-direction:column;
+        gap: 0.25in;
+      }
+      .card{
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0.22in;
+      }
+      h2{
+        margin:0 0 0.12in 0;
+        font-size: 22px;
+        font-weight: 750;
+      }
+      ul{margin: 0.08in 0 0 0.14in;}
+      .img{
+        width:100%;
+        border:1px solid var(--line);
+        border-radius: 6px;
+        overflow:hidden;
+        background:#fff;
+      }
+      .img img{display:block; width:100%; height:auto;}
+      .note{color:var(--muted); font-size:12px; margin-top:0.10in;}
+      .kpi{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.15in;
+        margin-top: 0.1in;
+      }
+      .kpi .pill{
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0.14in;
+      }
+      .pill b{display:block; font-size:13px;}
+      .pill span{color:var(--muted);}
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="header">
+        <div>
+          <h1 class="title">DESTINY Scaling + TSV Sensitivity Across Technology Nodes</h1>
+          <p class="subtitle">ESE 5760 Final Project (poster draft generated from in-repo experiments)</p>
+        </div>
+        <div class="authors">
+          <div>Tiebing Tang · Yishu Wang · Zhenyu Liu</div>
+          <div>Instructor: (fill from course PDF)</div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="col">
+          <div class="card">
+            <h2>Motivation</h2>
+            <ul>
+              <li>DESTINY provides analytical modeling for 2D/3D SRAM and eDRAM caches across 22–200nm.</li>
+              <li>Final goal: trace scaling trends across nodes and quantify sensitivity to TSV assumptions (projection, redundancy, hop model).</li>
+              <li>Scope is intentionally “input-driven” (no deep refactor), matching OH guidance: change inputs, observe trends, compare technologies.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h2>Method</h2>
+            <ul>
+              <li>Baseline normalization: same cache capacity (2MB), word width (256b), associativity (1), roadmap (LOP), temperature (350K).</li>
+              <li>Scaling sweep: 65/45/32/22nm for SRAM (2D/3D) and eDRAM (2D/3D).</li>
+              <li>TSV sweep: SRAM 3D fine (4-layer) at 65nm, varying redundancy and hop model.</li>
+            </ul>
+            <div class="note">Configs: <code>config/final/templates</code> → generated &amp; run via <code>scripts/final_*.ps1</code>.</div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card">
+            <h2>Results: Node Scaling</h2>
+            <div class="img"><img src="../figures/baseline_total_area.svg" alt="baseline total area" /></div>
+            <div class="img" style="margin-top:0.18in;"><img src="../figures/baseline_hit_latency.svg" alt="baseline hit latency" /></div>
+            <div class="img" style="margin-top:0.18in;"><img src="../figures/baseline_write_energy.svg" alt="baseline write energy" /></div>
+            <div class="note">All curves come from the same normalized baseline; only <code>ProcessNode</code> and technology/stacking differ.</div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card">
+            <h2>Results: TSV Sensitivity</h2>
+            <div class="img"><img src="../figures/tsv_hopmodel_energy.svg" alt="tsv hop model energy" /></div>
+            <div class="kpi">
+              <div class="pill">
+                <b>Key message</b>
+                <span>TSV modeling assumptions can shift 3D energy/latency trends; report them explicitly.</span>
+              </div>
+              <div class="pill">
+                <b>Next knob</b>
+                <span>Extend sweep to <code>LocalTSVProjection/GlobalTSVProjection</code> and compare aggressive vs conservative.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Takeaways</h2>
+            <ul>
+              <li>Baseline node sweep enables apples-to-apples trend tracing across SRAM/eDRAM and 2D/3D.</li>
+              <li>TSV assumptions (redundancy + hop distance) materially impact 3D breakdown terms.</li>
+              <li>Poster-ready workflow: <code>.cfg</code> generation → runs → parsing → SVG figures.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
