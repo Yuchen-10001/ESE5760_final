@@ -1,168 +1,518 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ESE 5760 Final Project Poster (Draft)</title>
-    <style>
-      :root{
-        --bg:#ffffff;
-        --ink:#0f172a;
-        --muted:#334155;
-        --line:#e2e8f0;
-        --accent:#2563eb;
-      }
-      html,body{height:100%; background:var(--bg); color:var(--ink); font:14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;}
-      body{margin:0;}
-      .page{
-        width: 44in;
-        height: 33in;
-        box-sizing: border-box;
-        padding: 0.9in;
-      }
-      .header{
-        display:flex;
-        justify-content:space-between;
-        align-items:flex-end;
-        border-bottom: 2px solid var(--line);
-        padding-bottom: 0.25in;
-        margin-bottom: 0.35in;
-      }
-      .title{
-        font-size: 44px;
-        font-weight: 750;
-        letter-spacing: 0px;
-        margin:0;
-      }
-      .subtitle{
-        margin: 0.12in 0 0 0;
-        color: var(--muted);
-        font-size: 18px;
-      }
-      .authors{
-        text-align:right;
-        color: var(--muted);
-        font-size: 18px;
-        white-space:nowrap;
-      }
-      .grid{
-        display:grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 0.35in;
-        height: calc(100% - 1.4in);
-      }
-      .col{
-        display:flex;
-        flex-direction:column;
-        gap: 0.25in;
-      }
-      .card{
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 0.22in;
-      }
-      h2{
-        margin:0 0 0.12in 0;
-        font-size: 22px;
-        font-weight: 750;
-      }
-      ul{margin: 0.08in 0 0 0.14in;}
-      .img{
-        width:100%;
-        border:1px solid var(--line);
-        border-radius: 6px;
-        overflow:hidden;
-        background:#fff;
-      }
-      .img img{display:block; width:100%; height:auto;}
-      .note{color:var(--muted); font-size:12px; margin-top:0.10in;}
-      .kpi{
-        display:grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.15in;
-        margin-top: 0.1in;
-      }
-      .kpi .pill{
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 0.14in;
-      }
-      .pill b{display:block; font-size:13px;}
-      .pill span{color:var(--muted);}
-    </style>
-  </head>
-  <body>
-    <div class="page">
-      <div class="header">
-        <div>
-          <h1 class="title">DESTINY Scaling + TSV Sensitivity Across Technology Nodes</h1>
-          <p class="subtitle">ESE 5760 Final Project (poster draft generated from in-repo experiments)</p>
-        </div>
-        <div class="authors">
-          <div>Tiebing Tang · Yishu Wang · Zhenyu Liu</div>
-          <div>Instructor: (fill from course PDF)</div>
+<head>
+  <meta charset="utf-8"/>
+  <title>ESE 5760 — Memory Technology Scaling Poster</title>
+  <style>
+    :root {
+      --navy:     #0c1f3f;
+      --navy-mid: #1e3a5f;
+      --blue:     #2563eb;
+      --bg:       #f1f5f9;
+      --card:     #ffffff;
+      --ink:      #0f172a;
+      --muted:    #475569;
+      --line:     #dde3ec;
+      --red:      #c0392b;
+      --green:    #15803d;
+      /* technology colours — match MATLAB plots exactly */
+      --c2ds: #1f77b4;
+      --c3ds: #d97706;
+      --c2de: #1a7a1a;
+      --c3de: #c0392b;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width:  44in;
+      height: 33in;
+      background: var(--bg);
+      font-family: 'Segoe UI', system-ui, -apple-system, Helvetica Neue, Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.42;
+      color: var(--ink);
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────────── */
+    .hdr {
+      background: linear-gradient(100deg, #0c1f3f 0%, #1a3560 100%);
+      color: #fff;
+      padding: 0.32in 0.72in 0.26in;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5in;
+    }
+    .hdr-left { flex: 1; }
+    .hdr h1 {
+      font-size: 46px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.12;
+      color: #fff;
+    }
+    .hdr-sub {
+      margin-top: 0.09in;
+      font-size: 15.5px;
+      color: #93c5fd;
+      letter-spacing: 0.2px;
+    }
+    .hdr-right {
+      text-align: right;
+      font-size: 14.5px;
+      color: #cbd5e1;
+      line-height: 1.75;
+      padding-top: 4px;
+      white-space: nowrap;
+    }
+    .hdr-right .names {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      display: block;
+    }
+
+    /* ─── BODY ───────────────────────────────────────────────── */
+    .body {
+      display: grid;
+      grid-template-columns: 0.98fr 1.06fr 0.96fr;
+      gap: 0.24in;
+      padding: 0.24in 0.72in 0.22in;
+      height: calc(33in - 1.38in);
+    }
+    .col { display: flex; flex-direction: column; gap: 0.19in; }
+
+    /* ─── CARD ───────────────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 0.17in 0.20in;
+    }
+    .card.grow { flex: 1; min-height: 0; }
+
+    .card h2 {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--navy-mid);
+      text-transform: uppercase;
+      letter-spacing: 1.0px;
+      padding-bottom: 0.07in;
+      border-bottom: 2px solid var(--navy-mid);
+      margin-bottom: 0.10in;
+    }
+
+    p { margin-bottom: 0.06in; font-size: 12.5px; }
+    ul { padding-left: 1.1em; font-size: 12.5px; }
+    li { margin-bottom: 0.035in; }
+
+    /* ─── TECH COLOUR SPANS ──────────────────────────────────── */
+    .t2ds { color: var(--c2ds); font-weight: 700; }
+    .t3ds { color: var(--c3ds); font-weight: 700; }
+    .t2de { color: var(--c2de); font-weight: 700; }
+    .t3de { color: var(--c3de); font-weight: 700; }
+
+    /* ─── LEGEND ─────────────────────────────────────────────── */
+    .legend { display: flex; gap: 0.16in; flex-wrap: wrap; margin-top: 0.10in; }
+    .leg { display: flex; align-items: center; gap: 5px; font-size: 12px; }
+    .swatch { width: 20px; height: 4px; border-radius: 2px; display: inline-block; }
+
+    /* ─── SETUP GRID ─────────────────────────────────────────── */
+    .setup {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.04in 0.16in;
+      margin-top: 0.08in;
+      font-size: 12px;
+    }
+    .srow { display: flex; justify-content: space-between; border-bottom: 1px solid var(--line); padding: 3px 0; }
+    .slabel { color: var(--muted); }
+    .sval { font-weight: 600; }
+
+    /* ─── DATA TABLE ─────────────────────────────────────────── */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 0.07in; }
+    th {
+      background: var(--navy-mid);
+      color: #fff;
+      font-weight: 600;
+      padding: 5px 7px;
+      text-align: center;
+      font-size: 11.5px;
+    }
+    th:first-child { text-align: left; }
+    td { padding: 4.5px 7px; border-bottom: 1px solid var(--line); text-align: center; font-size: 12px; }
+    td:first-child { text-align: left; font-weight: 500; color: var(--muted); }
+    tr:nth-child(even) td { background: #f8fafc; }
+    .best     { font-weight: 800; color: var(--c3de); }
+    .bestleak { font-weight: 800; color: var(--c2de); }
+    .hi       { color: var(--red); font-weight: 700; }
+
+    /* ─── FIGURE ─────────────────────────────────────────────── */
+    .fig { margin-top: 0.08in; }
+    .fig img { display: block; width: 100%; border-radius: 5px; border: 1px solid var(--line); }
+    .figcap {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 0.05in;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* ─── CALLOUT ────────────────────────────────────────────── */
+    .callout {
+      border-left: 4px solid var(--blue);
+      background: #eff6ff;
+      padding: 0.07in 0.11in;
+      border-radius: 0 6px 6px 0;
+      margin-top: 0.09in;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .callout.warn  { border-left-color: var(--red);   background: #fef2f2; }
+    .callout.good  { border-left-color: var(--green); background: #f0fdf4; }
+    .callout strong { display: block; margin-bottom: 2px; font-size: 12px; }
+
+    /* ─── KPI PILLS ──────────────────────────────────────────── */
+    .kpis { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.08in; margin-top: 0.09in; }
+    .kpi { background: var(--bg); border-radius: 7px; padding: 0.08in 0.06in; text-align: center; }
+    .kpi-n { font-size: 24px; font-weight: 800; line-height: 1; color: var(--navy-mid); }
+    .kpi-l { font-size: 10.5px; color: var(--muted); margin-top: 2px; line-height: 1.25; }
+
+    /* ─── CONCLUSION ITEMS ───────────────────────────────────── */
+    .citem { display: flex; gap: 0.09in; align-items: flex-start; margin-bottom: 0.07in; }
+    .cnum {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--navy-mid);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ctxt { font-size: 12px; line-height: 1.42; }
+
+    /* ─── TSV TABLE ──────────────────────────────────────────── */
+    .tsv-table td:nth-child(4) { color: var(--green); font-weight: 700; }
+    .tsv-table td:nth-child(2) { font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<!-- ╔════════════════════════════ HEADER ════════════════════════════════╗ -->
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>3D Memory Technology Scaling: Comparative Analysis<br>of SRAM &amp; eDRAM from 65 nm to 22 nm</h1>
+    <div class="hdr-sub">
+      DESTINY Analytical Model &ensp;·&ensp; 2 MB Cache &ensp;·&ensp; LOP Roadmap &ensp;·&ensp; WriteEDP Optimization &ensp;·&ensp; 22 Simulation Configurations
+    </div>
+  </div>
+  <div class="hdr-right">
+    <span class="names">Tiebing Tang &emsp; Yishu Wang &emsp; Zhenyu Liu</span>
+    ESE 5760 — Advanced Memory Systems<br>
+    University of Pennsylvania &ensp;·&ensp; Spring 2026
+  </div>
+</div>
+<!-- ╚════════════════════════════════════════════════════════════════════╝ -->
+
+<div class="body">
+
+  <!-- ════════════════════ COLUMN 1 ═══════════════════════════════ -->
+  <div class="col">
+
+    <div class="card">
+      <h2>Motivation &amp; Scope</h2>
+      <p>
+        Three-dimensional die stacking promises to halve memory footprint through vertical integration,
+        but the net benefit depends critically on process node, cell topology, and the TSV technology
+        assumptions embedded in the design model. For an SRAM cache, 3D stacking consistently reduces
+        per-die area because the 6T cell's large baseline absorbs TSV keep-out overhead.
+        For eDRAM, whose compact 1T-1C cell already occupies less silicon, the same TSV overhead
+        can <em>increase</em> total footprint at large feature sizes.
+      </p>
+      <p>
+        We use DESTINY's analytical cache model to address three questions across four memory technologies
+        (planar and stacked variants of SRAM and eDRAM) and four process nodes (65, 45, 32, 22 nm):
+      </p>
+      <ul>
+        <li>How do area, latency, write energy, and leakage scale with node for each technology?</li>
+        <li>When does 3D stacking benefit eDRAM, and what determines the crossover point?</li>
+        <li>How sensitive are system-level metrics to TSV projection and redundancy assumptions?</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Experimental Design</h2>
+      <p style="font-size:11.5px;color:var(--muted);">
+        All 22 runs share a strictly normalized baseline — only <code>ProcessNode</code> and
+        technology/stacking parameters vary — ensuring that observed differences reflect technology
+        choice rather than configuration artifacts.
+      </p>
+      <div class="setup">
+        <div class="srow"><span class="slabel">Capacity</span><span class="sval">2 MB</span></div>
+        <div class="srow"><span class="slabel">Word width</span><span class="sval">256 bit</span></div>
+        <div class="srow"><span class="slabel">Associativity</span><span class="sval">1-way</span></div>
+        <div class="srow"><span class="slabel">Roadmap</span><span class="sval">LOP</span></div>
+        <div class="srow"><span class="slabel">Temperature</span><span class="sval">350 K</span></div>
+        <div class="srow"><span class="slabel">Routing</span><span class="sval">H-tree</span></div>
+        <div class="srow"><span class="slabel">Optimization</span><span class="sval">WriteEDP</span></div>
+        <div class="srow"><span class="slabel">Nodes (Exp. 1)</span><span class="sval">65 / 45 / 32 / 22 nm</span></div>
+        <div class="srow"><span class="slabel">TSV variants (Exp. 2)</span><span class="sval">6 configs @ 32 nm</span></div>
+        <div class="srow"><span class="slabel">Total runs</span><span class="sval">22 (all passed)</span></div>
+      </div>
+      <div class="legend">
+        <div class="leg"><span class="swatch" style="background:var(--c2ds)"></span><span class="t2ds">2D SRAM</span></div>
+        <div class="leg"><span class="swatch" style="background:var(--c3ds)"></span><span class="t3ds">3D SRAM (2-die)</span></div>
+        <div class="leg"><span class="swatch" style="background:var(--c2de)"></span><span class="t2de">2D eDRAM</span></div>
+        <div class="leg"><span class="swatch" style="background:var(--c3de)"></span><span class="t3de">3D eDRAM (2-die)</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>32 nm Head-to-Head Comparison</h2>
+      <p style="font-size:11.5px;color:var(--muted);margin-bottom:0.05in;">
+        At the representative 32 nm node, <span class="t3de">3D eDRAM</span> leads on
+        three of four primary metrics; <span class="t2de">2D eDRAM</span> uniquely
+        minimizes standby leakage. Both SRAM variants are leakage-penalized.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th><span class="t2ds">2D SRAM</span></th>
+            <th><span class="t3ds">3D SRAM</span></th>
+            <th><span class="t2de">2D eDRAM</span></th>
+            <th><span class="t3de">3D eDRAM</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Area (mm²)</td>
+            <td>4.26</td><td>2.13</td><td>1.44</td>
+            <td class="best">1.07 ✦</td>
+          </tr>
+          <tr>
+            <td>Read latency (ns)</td>
+            <td>1.06</td><td>0.63</td><td>0.76</td>
+            <td class="best">0.47 ✦</td>
+          </tr>
+          <tr>
+            <td>Write energy (nJ)</td>
+            <td>0.123</td><td>0.089</td><td>0.066</td>
+            <td class="best">0.061 ✦</td>
+          </tr>
+          <tr>
+            <td>Leakage (mW)</td>
+            <td class="hi">234.6</td><td class="hi">234.6</td>
+            <td class="bestleak">30.0 ✦</td><td>50.1</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:10.5px;color:var(--muted);margin-top:0.05in;">
+        ✦ best in row &nbsp;·&nbsp; red = optimizer-induced spike (see Anomalies) &nbsp;·&nbsp; eDRAM refresh energy not modeled
+      </p>
+    </div>
+
+    <div class="card grow">
+      <h2>Conclusions</h2>
+
+      <div class="citem">
+        <div class="cnum">1</div>
+        <div class="ctxt">
+          <span class="t3de">3D eDRAM</span> is Pareto-optimal on area, read latency, and write energy at 32 nm simultaneously. At 22 nm its footprint reaches <strong>0.55 mm²</strong> — 22× more compact than 2D SRAM at 65 nm. Its read latency of <strong>0.42 ns</strong> is the only monotonically improving trajectory across all nodes.
         </div>
       </div>
 
-      <div class="grid">
-        <div class="col">
-          <div class="card">
-            <h2>Motivation</h2>
-            <ul>
-              <li>DESTINY provides analytical modeling for 2D/3D SRAM and eDRAM caches across 22–200nm.</li>
-              <li>Final goal: trace scaling trends across nodes and quantify sensitivity to TSV assumptions (projection, redundancy, hop model).</li>
-              <li>Scope is intentionally “input-driven” (no deep refactor), matching OH guidance: change inputs, observe trends, compare technologies.</li>
-            </ul>
-          </div>
-
-          <div class="card">
-            <h2>Method</h2>
-            <ul>
-              <li>Baseline normalization: same cache capacity (2MB), word width (256b), associativity (1), roadmap (LOP), temperature (350K).</li>
-              <li>Scaling sweep: 65/45/32/22nm for SRAM (2D/3D) and eDRAM (2D/3D).</li>
-              <li>TSV sweep: SRAM 3D fine (4-layer) at 65nm, varying redundancy and hop model.</li>
-            </ul>
-            <div class="note">Configs: <code>config/final/templates</code> → generated &amp; run via <code>scripts/final_*.ps1</code>.</div>
-          </div>
+      <div class="citem">
+        <div class="cnum">2</div>
+        <div class="ctxt">
+          <span class="t2de">2D eDRAM</span> is the leakage-optimal choice at every node, owing to its 1T-1C cell topology contributing a single subthreshold leakage path per bit versus six in SRAM's 6T cell. The structural leakage advantage is <strong>5–8×</strong> across all nodes and persists regardless of optimization target.
         </div>
+      </div>
 
-        <div class="col">
-          <div class="card">
-            <h2>Results: Node Scaling</h2>
-            <div class="img"><img src="../figures/baseline_total_area.svg" alt="baseline total area" /></div>
-            <div class="img" style="margin-top:0.18in;"><img src="../figures/baseline_hit_latency.svg" alt="baseline hit latency" /></div>
-            <div class="img" style="margin-top:0.18in;"><img src="../figures/baseline_write_energy.svg" alt="baseline write energy" /></div>
-            <div class="note">All curves come from the same normalized baseline; only <code>ProcessNode</code> and technology/stacking differ.</div>
-          </div>
+      <div class="citem">
+        <div class="cnum">3</div>
+        <div class="ctxt">
+          The <strong>65 nm SRAM latency spike</strong> (9.94 ns) and the <strong>32 nm SRAM leakage spike</strong> (234.6 mW) are both WriteEDP optimizer artifacts — not technology-intrinsic limits. A ReadLatency or LeakagePower target would yield substantially different results at these nodes.
         </div>
+      </div>
 
-        <div class="col">
-          <div class="card">
-            <h2>Results: TSV Sensitivity</h2>
-            <div class="img"><img src="../figures/tsv_hopmodel_energy.svg" alt="tsv hop model energy" /></div>
-            <div class="kpi">
-              <div class="pill">
-                <b>Key message</b>
-                <span>TSV modeling assumptions can shift 3D energy/latency trends; report them explicitly.</span>
-              </div>
-              <div class="pill">
-                <b>Next knob</b>
-                <span>Extend sweep to <code>LocalTSVProjection/GlobalTSVProjection</code> and compare aggressive vs conservative.</span>
-              </div>
-            </div>
-          </div>
+      <div class="citem">
+        <div class="cnum">4</div>
+        <div class="ctxt">
+          TSV technology uncertainty has minimal system-level impact at the 2 MB cache scale. Conservative TSV projections incur at most <strong>+5.5% area</strong> and <strong>+6.7% write energy</strong>, with <strong>zero latency penalty</strong> — the critical path does not traverse inter-die TSV interconnect at this configuration.
+        </div>
+      </div>
 
-          <div class="card">
-            <h2>Takeaways</h2>
-            <ul>
-              <li>Baseline node sweep enables apples-to-apples trend tracing across SRAM/eDRAM and 2D/3D.</li>
-              <li>TSV assumptions (redundancy + hop distance) materially impact 3D breakdown terms.</li>
-              <li>Poster-ready workflow: <code>.cfg</code> generation → runs → parsing → SVG figures.</li>
-            </ul>
-          </div>
+      <div class="citem">
+        <div class="cnum">5</div>
+        <div class="ctxt">
+          3D stacking benefits <span class="t3ds">SRAM</span> at all nodes (−42 to −50% area) but introduces an area <em>overhead</em> for <span class="t3de">eDRAM</span> at 65 nm (+30%), with the crossover occurring between 65 and 45 nm. TSV keep-out area is non-trivial relative to the compact 1T-1C cell at large feature sizes.
         </div>
       </div>
     </div>
-  </body>
-</html>
 
+  </div>
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+
+  <!-- ════════════════════ COLUMN 2 ═══════════════════════════════ -->
+  <div class="col">
+
+    <div class="card">
+      <h2>Total Die Area vs. Process Node</h2>
+      <div class="fig">
+        <img src="../../experiments/plots/fig3_total_area_vs_node.jpg" alt="Total Area vs. Process Node"/>
+        <div class="figcap">
+          <strong>Fig. 1</strong> — All technologies reduce area monotonically. eDRAM scales faster than SRAM
+          per node step (aggressive 1T-1C cell scaling). 3D eDRAM's 14.1× scaling ratio (65→22 nm) exceeds
+          all others by compounding cell scaling with the 3D die-halving benefit.
+        </div>
+      </div>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-n" style="color:var(--c3de)">14.1×</div>
+          <div class="kpi-l">3D eDRAM<br>65→22 nm</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-n" style="color:var(--c2ds)">6.7×</div>
+          <div class="kpi-l">2D SRAM<br>65→22 nm</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-n" style="color:var(--red)">+30%</div>
+          <div class="kpi-l">3D eDRAM area<br><em>overhead</em> at 65 nm</div>
+        </div>
+      </div>
+      <div class="callout warn">
+        <strong>3D eDRAM area crossover between 65 and 45 nm</strong>
+        At 65 nm, TSV keep-out zones exceed the die-halving benefit for the compact 1T-1C cell
+        (7.74 mm² vs. 5.96 mm² for 2D eDRAM). By 45 nm, the same TSV overhead represents a
+        smaller fraction of the reduced cell area, and 3D stacking delivers a 31% footprint reduction.
+      </div>
+    </div>
+
+    <div class="card grow">
+      <h2>Cache Hit Latency vs. Process Node</h2>
+      <div class="fig">
+        <img src="../../experiments/plots/fig1_read_latency_vs_node.jpg" alt="Read Latency vs. Process Node"/>
+        <div class="figcap">
+          <strong>Fig. 2</strong> — <span style="color:var(--c3de);font-weight:700">3D eDRAM</span>
+          is the sole technology with strictly monotonic latency improvement (0.54→0.42 ns).
+          SRAM exhibits an optimizer-induced discontinuity at 65 nm that disappears at 45 nm.
+        </div>
+      </div>
+      <div class="callout warn">
+        <strong>65 nm SRAM latency spike — optimizer artifact, not a technology ceiling</strong>
+        The 2D SRAM array at 65 nm spans 12.35 mm². DESTINY's WriteEDP optimizer responds by selecting
+        a deeply hierarchical bank organization to reduce energy, forcing global H-tree wire delays
+        (t ∝ √A) to dominate: <strong>9.94 ns</strong> for 2D SRAM, <strong>4.70 ns</strong> for 3D SRAM.
+        At 45 nm, the 30% area reduction collapses H-tree depth and latency drops to sub-1 ns.
+        Under a ReadLatency target, this discontinuity would not appear.
+      </div>
+      <div class="callout" style="margin-top:0.08in;">
+        <strong>Post-45 nm SRAM latency increases mildly (0.94→1.18 ns)</strong>
+        Under WriteEDP, the optimizer progressively favors energy-conservative configurations at finer
+        nodes, accepting slightly higher latency. 3D eDRAM avoids this because its compact per-die
+        footprint allows the optimizer to minimize both terms simultaneously.
+      </div>
+    </div>
+
+  </div>
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+
+  <!-- ════════════════════ COLUMN 3 ═══════════════════════════════ -->
+  <div class="col">
+
+    <div class="card">
+      <h2>Total Leakage Power vs. Process Node</h2>
+      <div class="fig">
+        <img src="../../experiments/plots/fig4_leakage_power_vs_node.jpg" alt="Leakage Power vs. Process Node"/>
+        <div class="figcap">
+          <strong>Fig. 3</strong> — eDRAM leakage is 5–8× lower than SRAM at all nodes.
+          SRAM spikes to 234.6 mW at 32 nm (both 2D and 3D converge to the same value).
+        </div>
+      </div>
+      <div class="callout warn">
+        <strong>32 nm SRAM leakage spike: 234.6 mW — identical for 2D and 3D</strong>
+        The matching values confirm the WriteEDP optimizer selected the same physical configuration
+        regardless of die stacking. At 32 nm, minimizing write EDP requires a high-subarray-parallelism
+        organization that dramatically increases simultaneously biased transistors.
+        eDRAM is immune: its 1T-1C cell contributes one leakage transistor per bit vs. six for SRAM.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Write Dynamic Energy vs. Process Node</h2>
+      <div class="fig">
+        <img src="../../experiments/plots/fig2_write_energy_vs_node.jpg" alt="Write Energy vs. Process Node"/>
+        <div class="figcap">
+          <strong>Fig. 4</strong> — SRAM energy peaks at 45 nm (reorganization artifact).
+          All technologies converge to 0.019–0.035 nJ at 22 nm as V<sub>DD</sub>² scaling dominates.
+        </div>
+      </div>
+      <div class="callout">
+        <strong>Non-monotonic SRAM energy: configuration reorganization, not physics</strong>
+        E<sub>write</sub> = C<sub>sw</sub> · V<sub>DD</sub>² · α. At 45 nm, the optimizer
+        selects higher subarray parallelism (lowering write latency, improving EDP), increasing
+        C<sub>sw</sub> enough to reverse the V<sub>DD</sub>² reduction. By 32–22 nm, voltage
+        scaling reasserts dominance and all technologies converge.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>TSV Parameter Sensitivity — 3D SRAM @ 32 nm</h2>
+      <div class="fig">
+        <img src="../../experiments/plots/fig5_tsv_sensitivity_area.jpg" alt="TSV Sensitivity — Area"/>
+        <div class="figcap">
+          <strong>Fig. 5</strong> — LocalTSVProjection has the largest area impact (+5.5% at level 1,
+          non-monotonic). GlobalTSVProjection and TSVRedundancy are negligible (&lt;1%).
+        </div>
+      </div>
+      <table class="tsv-table" style="margin-top:0.08in;">
+        <thead>
+          <tr>
+            <th>TSV Parameter</th>
+            <th>Max Δ Area</th>
+            <th>Max Δ Write E.</th>
+            <th>Δ Read Latency</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>LocalTSVProjection (0→2)</td>
+            <td>+5.5%</td>
+            <td>+6.7%</td>
+            <td>0%</td>
+          </tr>
+          <tr>
+            <td>GlobalTSVProjection (0→2)</td>
+            <td>+0.8%</td>
+            <td>+1.1%</td>
+            <td>0%</td>
+          </tr>
+          <tr>
+            <td>TSVRedundancy (1.0→1.5)</td>
+            <td>&lt;0.1%</td>
+            <td>+1.1%</td>
+            <td>0%</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout good">
+        <strong>Read and write latency are completely decoupled from all TSV parameters</strong>
+        The critical timing path does not traverse inter-die TSV interconnect at the 2 MB scale and
+        32 nm node — the H-tree remains the bottleneck. Worst-case TSV conservatism adds
+        <strong>+5.5% area</strong> and <strong>+6.7% write energy</strong> with
+        <strong>zero latency cost</strong>. Designers can safely use conservative TSV projections
+        without penalizing system performance.
+      </div>
+    </div>
+
+  </div>
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+
+</div>
+</body>
+</html>

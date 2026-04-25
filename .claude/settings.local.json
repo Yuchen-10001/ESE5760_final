@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python experiments/scripts/generate_configs.py)",
+      "Bash(python3 experiments/scripts/generate_configs.py)",
+      "PowerShell(cd \"f:\\\\Smester1\\\\Memory\\\\final\"; powershell -ExecutionPolicy Bypass -File experiments\\\\scripts\\\\run_all_experiments.ps1)",
+      "PowerShell(cd \"f:\\\\Smester1\\\\Memory\\\\final\"; powershell -ExecutionPolicy Bypass -File experiments\\\\scripts\\\\parse_results.ps1)",
+      "PowerShell(cd \"f:\\\\Smester1\\\\Memory\\\\final\"; powershell -ExecutionPolicy Bypass -File experiments\\\\scripts\\\\generate_plots_html.ps1)",
+      "PowerShell(cd \"f:\\\\Smester1\\\\Memory\\\\final\"; powershell -ExecutionPolicy Bypass -File experiments\\\\scripts\\\\generate_plots_jpg.ps1)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(git merge *)",
+      "Bash(git branch *)"
+    ]
+  }
+}
