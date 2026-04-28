@@ -375,10 +375,10 @@ def build_poster() -> Path:
     )
 
     # Results figures selected using the poster criteria in the proposal: 3-5 strong visuals.
-    add_picture(slide, PLOTS / "fig3_total_area_vs_node.png", 13900000, 12150000, 7600000, 2350000)
-    add_picture(slide, PLOTS / "fig1_read_latency_vs_node.png", 22300000, 12150000, 7600000, 2350000)
-    add_picture(slide, PLOTS / "fig4_leakage_power_vs_node.png", 13900000, 21450000, 7900000, 4300000)
-    add_picture(slide, PLOTS / "fig5_tsv_sensitivity_area.png", 22500000, 21450000, 7900000, 4300000)
+    add_picture(slide, PLOTS / "regular_node_sweep" / "fig01_total_area_vs_node.png", 13900000, 12150000, 7600000, 2350000)
+    add_picture(slide, PLOTS / "regular_node_sweep" / "fig02_read_latency_vs_node.png", 22300000, 12150000, 7600000, 2350000)
+    add_picture(slide, PLOTS / "regular_node_sweep" / "fig06_leakage_power_vs_node.png", 13900000, 21450000, 7900000, 4300000)
+    add_picture(slide, PLOTS / "tsv_sensitivity" / "fig07_tsv_sensitivity_area.png", 22500000, 21450000, 7900000, 4300000)
 
     # Representative fixed-capacity comparison panel on the right.
     add_picture(slide, assets["scorecard"], 38095953, 718571, 5024943, 5043857)

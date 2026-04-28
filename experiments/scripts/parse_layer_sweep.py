@@ -2,7 +2,7 @@
 """
 parse_layer_sweep.py
 
-Parses experiments/layer_sweep/results/*.txt into a CSV summary.
+Parses experiments/exploratory_sweeps/layer_sweep/results/*.txt into a CSV summary.
 """
 
 import csv
@@ -10,8 +10,8 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-RESULTS_DIR = ROOT / "experiments" / "layer_sweep" / "results"
-DATA_DIR = ROOT / "experiments" / "layer_sweep" / "data"
+RESULTS_DIR = ROOT / "experiments" / "exploratory_sweeps" / "layer_sweep" / "results"
+DATA_DIR = ROOT / "experiments" / "exploratory_sweeps" / "layer_sweep" / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 OUT_CSV = DATA_DIR / "layer_sweep_results.csv"
 

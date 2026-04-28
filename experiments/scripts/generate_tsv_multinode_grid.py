@@ -14,13 +14,13 @@ Total:
     2 nodes x 3 x 3 x 3 = 54 configs
 
 Output:
-    experiments/tsv_multinode/configs/*.cfg
+    experiments/exploratory_sweeps/tsv_multinode/configs/*.cfg
 """
 
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-OUT_DIR = ROOT / "experiments" / "tsv_multinode" / "configs"
+OUT_DIR = ROOT / "experiments" / "exploratory_sweeps" / "tsv_multinode" / "configs"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 CELL_SRAM = "config/sample_SRAM.cell"

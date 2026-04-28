@@ -5,12 +5,12 @@ plot_tsv_multinode.py
 Visualize the full-factorial TSV sweep for 3D SRAM at 32nm and 45nm.
 
 Input:
-    experiments/tsv_multinode/data/tsv_multinode_results.csv
+    experiments/exploratory_sweeps/tsv_multinode/data/tsv_multinode_results.csv
 
 Output:
-    experiments/plots/fig11_tsv_multinode_area.jpg
-    experiments/plots/fig12_tsv_multinode_write_energy.jpg
-    experiments/plots/fig13_tsv_multinode_read_latency.jpg
+    experiments/plots/exploratory_sweeps/fig13_tsv_multinode_area.jpg
+    experiments/plots/exploratory_sweeps/fig14_tsv_multinode_write_energy.jpg
+    experiments/plots/exploratory_sweeps/fig15_tsv_multinode_read_latency.jpg
 """
 
 from pathlib import Path
@@ -19,8 +19,8 @@ import csv
 import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-CSV_PATH = ROOT / "experiments" / "tsv_multinode" / "data" / "tsv_multinode_results.csv"
-PLOTS_DIR = ROOT / "experiments" / "plots"
+CSV_PATH = ROOT / "experiments" / "exploratory_sweeps" / "tsv_multinode" / "data" / "tsv_multinode_results.csv"
+PLOTS_DIR = ROOT / "experiments" / "plots" / "exploratory_sweeps"
 PLOTS_DIR.mkdir(parents=True, exist_ok=True)
 
 NODES = [32, 45]
@@ -166,7 +166,7 @@ def main():
         "total_area_mm2",
         "Total Area (mm^2)",
         "TSV Multinode Sweep — Total Area (3D SRAM @ 32 nm / 45 nm)",
-        "fig11_tsv_multinode_area.jpg",
+        "fig13_tsv_multinode_area.jpg",
         legend_loc="best",
     )
 
@@ -175,7 +175,7 @@ def main():
         "write_energy_nJ",
         "Write Dynamic Energy (nJ/access)",
         "TSV Multinode Sweep — Write Dynamic Energy (3D SRAM @ 32 nm / 45 nm)",
-        "fig12_tsv_multinode_write_energy.jpg",
+        "fig14_tsv_multinode_write_energy.jpg",
         legend_loc="best",
     )
 
@@ -184,7 +184,7 @@ def main():
         "read_latency_ns",
         "Read Latency (ns)",
         "TSV Multinode Sweep — Read Latency (3D SRAM @ 32 nm / 45 nm)",
-        "fig13_tsv_multinode_read_latency.jpg",
+        "fig15_tsv_multinode_read_latency.jpg",
         legend_loc="best",
     )
 

@@ -2,7 +2,7 @@
 """
 parse_tsv_multinode_grid.py
 
-Parse experiments/tsv_multinode/results/*.txt into a CSV summary.
+Parse experiments/exploratory_sweeps/tsv_multinode/results/*.txt into a CSV summary.
 """
 
 import csv
@@ -10,8 +10,8 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-RESULTS_DIR = ROOT / "experiments" / "tsv_multinode" / "results"
-DATA_DIR = ROOT / "experiments" / "tsv_multinode" / "data"
+RESULTS_DIR = ROOT / "experiments" / "exploratory_sweeps" / "tsv_multinode" / "results"
+DATA_DIR = ROOT / "experiments" / "exploratory_sweeps" / "tsv_multinode" / "data"
 OUT_CSV = DATA_DIR / "tsv_multinode_results.csv"
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)

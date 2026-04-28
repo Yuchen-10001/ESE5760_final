@@ -10,7 +10,7 @@ The sweep uses direct physical scaling factors rather than projection labels.
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-OUT_DIR = ROOT / "experiments" / "tsv_physical_45nm" / "configs"
+OUT_DIR = ROOT / "experiments" / "exploratory_sweeps" / "tsv_physical_45nm" / "configs"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 CELL_SRAM = "config/sample_SRAM.cell"

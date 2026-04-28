@@ -1,4 +1,4 @@
-% fig5_tsv_sensitivity_area.m
+% fig07_tsv_sensitivity_area.m
 % TSV Parameter Sensitivity — Total Area (3D SRAM @ 32nm) — ESE5760 Final Project
 % Baseline: LocalTSVProjection=0, GlobalTSVProjection=0, TSVRedundancy=1.0
 % One parameter swept at a time
@@ -44,4 +44,4 @@ sgtitle('TSV Parameter Sensitivity — Total Area  (3D SRAM @ 32 nm)', 'FontSize
 
 drawnow;
 set(gcf, 'Renderer', 'painters');
-print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', 'plots', 'fig5_tsv_sensitivity_area.jpg'));
+print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', '..', 'plots', 'tsv_sensitivity', 'fig07_tsv_sensitivity_area.jpg'));

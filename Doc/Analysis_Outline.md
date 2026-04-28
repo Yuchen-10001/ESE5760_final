@@ -225,14 +225,15 @@ Using 32 nm as the representative node (most balanced across all metrics):
 
 | Figure | Content | Script |
 |---|---|---|
-| Fig. 1 | Total Area vs. Process Node (4 technologies) | `fig1_area_vs_node.m` |
-| Fig. 2 | Read Latency vs. Process Node | `fig2_read_latency_vs_node.m` |
-| Fig. 3 | Write Dynamic Energy vs. Process Node | `fig3_write_energy_vs_node.m` |
-| Fig. 4 | Total Leakage Power vs. Process Node | `fig4_leakage_vs_node.m` |
-| Fig. 5 | TSV Sensitivity — Total Area | `fig5_tsv_sensitivity_area.m` |
-| Fig. 6 | TSV Sensitivity — Read Latency | `fig6_tsv_sensitivity_latency.m` |
-| Fig. 7 *(optional)* | Cross-technology trade-off scatter at 32 nm | — |
+| Fig. 1 | Total Area vs. Process Node (4 technologies) | `experiments/matlab/regular_node_sweep/fig01_total_area_vs_node.m` |
+| Fig. 2 | Read Latency vs. Process Node | `experiments/matlab/regular_node_sweep/fig02_read_latency_vs_node.m` |
+| Fig. 3 | Write Latency vs. Process Node | `experiments/matlab/regular_node_sweep/fig03_write_latency_vs_node.m` |
+| Fig. 4 | Read Dynamic Energy vs. Process Node | `experiments/matlab/regular_node_sweep/fig04_read_energy_vs_node.m` |
+| Fig. 5 | Write Dynamic Energy vs. Process Node | `experiments/matlab/regular_node_sweep/fig05_write_energy_vs_node.m` |
+| Fig. 6 | Total Leakage Power vs. Process Node | `experiments/matlab/regular_node_sweep/fig06_leakage_power_vs_node.m` |
+| Fig. 7 | TSV Sensitivity — Total Area | `experiments/matlab/tsv_sensitivity/fig07_tsv_sensitivity_area.m` |
+| Fig. 8 | TSV Sensitivity — Read Latency | `experiments/matlab/tsv_sensitivity/fig08_tsv_sensitivity_read_latency.m` |
 
 ---
 
-*This outline is the basis for both the poster and the writeup. Sections 2.1–2.4 map directly to the four trend figures; §2.6 maps to the poster's summary panel; §2.7 maps to Fig. 5–6.*
+*This outline is the basis for both the poster and the writeup. Regular node-sweep figures live under `regular_node_sweep`; TSV figures live under `tsv_sensitivity`.*

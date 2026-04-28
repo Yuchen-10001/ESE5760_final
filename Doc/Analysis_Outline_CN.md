@@ -227,14 +227,15 @@
 
 | 图号 | 内容 | MATLAB 脚本 |
 |---|---|---|
-| Fig. 1 | 总面积 vs. 工艺节点（4 种技术） | `fig1_area_vs_node.m` |
-| Fig. 2 | 读延迟 vs. 工艺节点 | `fig2_read_latency_vs_node.m` |
-| Fig. 3 | 写动态能耗 vs. 工艺节点 | `fig3_write_energy_vs_node.m` |
-| Fig. 4 | 总泄漏功耗 vs. 工艺节点 | `fig4_leakage_vs_node.m` |
-| Fig. 5 | TSV 敏感性 — 总面积 | `fig5_tsv_sensitivity_area.m` |
-| Fig. 6 | TSV 敏感性 — 读延迟 | `fig6_tsv_sensitivity_latency.m` |
-| Fig. 7 *(可选)* | 32 nm 横向对比散点图 | — |
+| Fig. 1 | 总面积 vs. 工艺节点（4 种技术） | `experiments/matlab/regular_node_sweep/fig01_total_area_vs_node.m` |
+| Fig. 2 | 读延迟 vs. 工艺节点 | `experiments/matlab/regular_node_sweep/fig02_read_latency_vs_node.m` |
+| Fig. 3 | 写延迟 vs. 工艺节点 | `experiments/matlab/regular_node_sweep/fig03_write_latency_vs_node.m` |
+| Fig. 4 | 读动态能耗 vs. 工艺节点 | `experiments/matlab/regular_node_sweep/fig04_read_energy_vs_node.m` |
+| Fig. 5 | 写动态能耗 vs. 工艺节点 | `experiments/matlab/regular_node_sweep/fig05_write_energy_vs_node.m` |
+| Fig. 6 | 总泄漏功耗 vs. 工艺节点 | `experiments/matlab/regular_node_sweep/fig06_leakage_power_vs_node.m` |
+| Fig. 7 | TSV 敏感性 — 总面积 | `experiments/matlab/tsv_sensitivity/fig07_tsv_sensitivity_area.m` |
+| Fig. 8 | TSV 敏感性 — 读延迟 | `experiments/matlab/tsv_sensitivity/fig08_tsv_sensitivity_read_latency.m` |
 
 ---
 
-*本大纲同时适用于 poster 和 writeup。§2.1–2.4 对应四张趋势图；§2.6 对应 poster 的技术对比汇总面板；§2.7 对应 Fig. 5–6。*
+*本大纲同时适用于 poster 和 writeup。常规 node sweep 图放在 `regular_node_sweep`；TSV 图放在 `tsv_sensitivity`。*

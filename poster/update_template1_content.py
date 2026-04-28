@@ -156,9 +156,9 @@ def build_main_results_panel(out_path: Path) -> None:
     gs = fig.add_gridspec(2, 2, left=0.04, right=0.98, top=0.92, bottom=0.08, hspace=0.28, wspace=0.18)
 
     panels = [
-        (PLOTS / "fig3_total_area_vs_node.png", "Area scaling"),
-        (PLOTS / "fig1_read_latency_vs_node.png", "Read latency"),
-        (PLOTS / "fig4_leakage_power_vs_node.png", "Leakage behavior"),
+        (PLOTS / "regular_node_sweep" / "fig01_total_area_vs_node.png", "Area scaling"),
+        (PLOTS / "regular_node_sweep" / "fig02_read_latency_vs_node.png", "Read latency"),
+        (PLOTS / "regular_node_sweep" / "fig06_leakage_power_vs_node.png", "Leakage behavior"),
     ]
     slots = [(0, 0), (0, 1), (1, 0)]
     for (path, title), (r, c) in zip(panels, slots):
@@ -215,8 +215,8 @@ def build_tsv_panel(out_path: Path) -> None:
     gs = fig.add_gridspec(2, 1, left=0.05, right=0.98, top=0.90, bottom=0.10, hspace=0.18)
     for idx, (path, title) in enumerate(
         [
-            (PLOTS / "fig5_tsv_sensitivity_area.png", "Area sensitivity"),
-            (PLOTS / "fig6_tsv_sensitivity_latency.png", "Latency sensitivity"),
+            (PLOTS / "tsv_sensitivity" / "fig07_tsv_sensitivity_area.png", "Area sensitivity"),
+            (PLOTS / "tsv_sensitivity" / "fig08_tsv_sensitivity_read_latency.png", "Latency sensitivity"),
         ]
     ):
         ax = fig.add_subplot(gs[idx, 0])

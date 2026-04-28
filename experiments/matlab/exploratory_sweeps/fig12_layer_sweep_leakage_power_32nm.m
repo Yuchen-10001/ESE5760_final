@@ -1,4 +1,4 @@
-% fig10_leakage_vs_layers_32nm.m
+% fig12_layer_sweep_leakage_power_32nm.m
 % Leakage Power vs. Layer Count @ 32nm — ESE5760 Final Project
 % Data: DESTINY simulation, 2MB / 256-bit / Assoc=1 / LOP / 350K / WriteEDP
 
@@ -23,4 +23,4 @@ box on;
 
 drawnow;
 set(gcf, 'Renderer', 'painters');
-print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', 'plots', 'fig10_leakage_vs_layers_32nm.jpg'));
+print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', '..', 'plots', 'exploratory_sweeps', 'fig12_layer_sweep_leakage_power_32nm.jpg'));

@@ -1,4 +1,4 @@
-% fig7_area_vs_layers_32nm.m
+% fig09_layer_sweep_area_32nm.m
 % Total Area vs. Layer Count @ 32nm — ESE5760 Final Project
 % Data: DESTINY simulation, 2MB / 256-bit / Assoc=1 / LOP / 350K / WriteEDP
 
@@ -23,4 +23,4 @@ box on;
 
 drawnow;
 set(gcf, 'Renderer', 'painters');
-print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', 'plots', 'fig7_area_vs_layers_32nm.jpg'));
+print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', '..', 'plots', 'exploratory_sweeps', 'fig09_layer_sweep_area_32nm.jpg'));

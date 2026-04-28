@@ -1,4 +1,4 @@
-% fig3_write_energy_vs_node.m
+% fig05_write_energy_vs_node.m
 % Write Dynamic Energy vs. Process Node — ESE5760 Final Project
 % Data: DESTINY simulation, 2MB / 256-bit / Assoc=1 / LOP / 350K / WriteEDP
 
@@ -30,4 +30,4 @@ box on;
 
 drawnow;
 set(gcf, 'Renderer', 'painters');
-print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', 'plots', 'fig3_write_energy_vs_node.jpg'));
+print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', '..', 'plots', 'regular_node_sweep', 'fig05_write_energy_vs_node.jpg'));

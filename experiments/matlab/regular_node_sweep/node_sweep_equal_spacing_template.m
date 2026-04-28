@@ -6,8 +6,8 @@
 %   2. Use equal-spaced x positions instead of raw nm values.
 %      This prevents 180->130 from looking much wider than 32->22.
 %   3. Keep the x-axis tick labels as real process nodes.
-%   4. Use the same colors/markers as fig1-fig4/fig14-fig15.
-%   5. Save figures under experiments/plots using the script filename path.
+%   4. Use the same colors/markers as fig01-fig06.
+%   5. Save figures under experiments/plots/regular_node_sweep.
 %
 % To create a new figure:
 %   - Copy this file to figXX_metric_vs_node.m.
@@ -46,4 +46,4 @@ box on;
 
 drawnow;
 set(gcf, 'Renderer', 'painters');
-print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', 'plots', output_name));
+print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', '..', 'plots', 'regular_node_sweep', output_name));

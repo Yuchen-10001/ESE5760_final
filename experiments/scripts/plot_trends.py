@@ -4,15 +4,15 @@ plot_trends.py
 Reads experiments/data/results.csv and generates publication-ready figures
 for the ESE5760 Final Project poster and writeup.
 
-Figures produced (saved to experiments/plots/):
-    fig1_read_latency_vs_node.png   — Exp 1: Read latency trend across nodes
-    fig2_write_energy_vs_node.png   — Exp 1: Write dynamic energy trend
-    fig3_total_area_vs_node.png     — Exp 1: Total area trend
-    fig4_leakage_power_vs_node.png  — Exp 1: Leakage power trend
-    fig14_read_energy_vs_node.png   — Exp 1: Read dynamic energy trend
-    fig15_write_latency_vs_node.png — Exp 1: Write latency trend
-    fig5_tsv_sensitivity_area.png   — Exp 2: TSV param effect on area
-    fig6_tsv_sensitivity_latency.png — Exp 2: TSV param effect on latency
+Figures produced:
+    experiments/plots/regular_node_sweep/fig01_total_area_vs_node.png
+    experiments/plots/regular_node_sweep/fig02_read_latency_vs_node.png
+    experiments/plots/regular_node_sweep/fig03_write_latency_vs_node.png
+    experiments/plots/regular_node_sweep/fig04_read_energy_vs_node.png
+    experiments/plots/regular_node_sweep/fig05_write_energy_vs_node.png
+    experiments/plots/regular_node_sweep/fig06_leakage_power_vs_node.png
+    experiments/plots/tsv_sensitivity/fig07_tsv_sensitivity_area.png
+    experiments/plots/tsv_sensitivity/fig08_tsv_sensitivity_read_latency.png
 
 Requires: matplotlib, pandas  (pip install matplotlib pandas)
 """
@@ -29,9 +29,12 @@ except ImportError:
     sys.exit(1)
 
 ROOT      = Path(__file__).resolve().parent.parent.parent
-DATA_CSV  = ROOT / "experiments" / "data" / "results.csv"
-PLOTS_DIR = ROOT / "experiments" / "plots"
-PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+DATA_CSV = ROOT / "experiments" / "data" / "results.csv"
+PLOTS_ROOT = ROOT / "experiments" / "plots"
+REGULAR_PLOTS_DIR = PLOTS_ROOT / "regular_node_sweep"
+TSV_PLOTS_DIR = PLOTS_ROOT / "tsv_sensitivity"
+REGULAR_PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+TSV_PLOTS_DIR.mkdir(parents=True, exist_ok=True)
 
 if not DATA_CSV.exists():
     print(f"results.csv not found at {DATA_CSV}")
@@ -73,8 +76,8 @@ TSV_PARAM_COLOR = {
 }
 
 
-def save(fig, name):
-    path = PLOTS_DIR / name
+def save(fig, directory, name):
+    path = directory / name
     fig.savefig(path, bbox_inches="tight")
     if path.suffix.lower() == ".png":
         fig.savefig(path.with_suffix(".jpg"), bbox_inches="tight")
@@ -91,12 +94,12 @@ exp1["node_nm"] = exp1["node_nm"].astype(int)
 exp1 = exp1.sort_values("node_nm", ascending=False)
 
 METRICS_EXP1 = [
-    ("read_latency_ns",   "Read Latency (ns)",             "fig1_read_latency_vs_node.png"),
-    ("write_energy_nJ",   "Write Dynamic Energy (nJ)",     "fig2_write_energy_vs_node.png"),
-    ("total_area_mm2",    "Total Area (mm²)",              "fig3_total_area_vs_node.png"),
-    ("leakage_power_mW",  "Total Leakage Power (mW)",      "fig4_leakage_power_vs_node.png"),
-    ("read_energy_nJ",    "Read Dynamic Energy (nJ)",      "fig14_read_energy_vs_node.png"),
-    ("write_latency_ns",  "Write Latency (ns)",            "fig15_write_latency_vs_node.png"),
+    ("total_area_mm2",    "Total Area (mm²)",              "fig01_total_area_vs_node.png"),
+    ("read_latency_ns",   "Read Latency (ns)",             "fig02_read_latency_vs_node.png"),
+    ("write_latency_ns",  "Write Latency (ns)",            "fig03_write_latency_vs_node.png"),
+    ("read_energy_nJ",    "Read Dynamic Energy (nJ)",      "fig04_read_energy_vs_node.png"),
+    ("write_energy_nJ",   "Write Dynamic Energy (nJ)",     "fig05_write_energy_vs_node.png"),
+    ("leakage_power_mW",  "Total Leakage Power (mW)",      "fig06_leakage_power_vs_node.png"),
 ]
 
 for metric, ylabel, figname in METRICS_EXP1:
@@ -125,7 +128,7 @@ for metric, ylabel, figname in METRICS_EXP1:
     ax.legend(loc="best")
     ax.grid(True, linestyle="--", alpha=0.5)
 
-    save(fig, figname)
+    save(fig, REGULAR_PLOTS_DIR, figname)
 
 # ---------------------------------------------------------------------------
 # Experiment 2 — TSV sensitivity
@@ -152,8 +155,8 @@ def build_tsv_sweep(param_name):
 
 
 TSV_METRICS = [
-    ("total_area_mm2",   "Total Area (mm²)",       "fig5_tsv_sensitivity_area.png"),
-    ("read_latency_ns",  "Read Latency (ns)",       "fig6_tsv_sensitivity_latency.png"),
+    ("total_area_mm2",   "Total Area (mm²)",       "fig07_tsv_sensitivity_area.png"),
+    ("read_latency_ns",  "Read Latency (ns)",      "fig08_tsv_sensitivity_read_latency.png"),
 ]
 
 for metric, ylabel, figname in TSV_METRICS:
@@ -174,6 +177,7 @@ for metric, ylabel, figname in TSV_METRICS:
     ax.legend(loc="best")
     ax.grid(True, linestyle="--", alpha=0.5)
 
-    save(fig, figname)
+    save(fig, TSV_PLOTS_DIR, figname)
 
-print(f"\nAll figures saved to {PLOTS_DIR}")
+print(f"\nRegular figures saved to {REGULAR_PLOTS_DIR}")
+print(f"TSV figures saved to {TSV_PLOTS_DIR}")

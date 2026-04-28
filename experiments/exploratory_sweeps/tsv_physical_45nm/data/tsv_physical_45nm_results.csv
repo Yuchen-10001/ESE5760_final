@@ -1,0 +1,12 @@
+filename,case,technology,node_nm,total_area_mm2,read_latency_ns,write_latency_ns,write_energy_nJ,leakage_power_mW
+TSVPhys_3D_SRAM_45nm_baseline_output.txt,baseline,3D_SRAM,45,5.245,0.654,0.367,0.132,51.269
+TSVPhys_3D_SRAM_45nm_best_case_output.txt,best_case,3D_SRAM,45,5.243,0.654,0.367,0.141,51.269
+TSVPhys_3D_SRAM_45nm_dense_pitch_output.txt,dense_pitch,3D_SRAM,45,5.243,0.654,0.367,0.135,51.269
+TSVPhys_3D_SRAM_45nm_high_contact_output.txt,high_contact,3D_SRAM,45,5.245,0.654,0.367,0.132,51.269
+TSVPhys_3D_SRAM_45nm_long_tsv_output.txt,long_tsv,3D_SRAM,45,5.245,0.654,0.367,0.133,51.269
+TSVPhys_3D_SRAM_45nm_low_contact_output.txt,low_contact,3D_SRAM,45,5.245,0.654,0.367,0.132,51.269
+TSVPhys_3D_SRAM_45nm_short_tsv_output.txt,short_tsv,3D_SRAM,45,5.245,0.654,0.367,0.131,51.269
+TSVPhys_3D_SRAM_45nm_sparse_pitch_output.txt,sparse_pitch,3D_SRAM,45,5.247,0.654,0.367,0.132,51.269
+TSVPhys_3D_SRAM_45nm_thick_via_output.txt,thick_via,3D_SRAM,45,5.245,0.654,0.367,0.134,51.269
+TSVPhys_3D_SRAM_45nm_thin_via_output.txt,thin_via,3D_SRAM,45,5.245,0.654,0.367,0.131,51.269
+TSVPhys_3D_SRAM_45nm_worst_case_output.txt,worst_case,3D_SRAM,45,5.247,0.654,0.367,0.132,51.269

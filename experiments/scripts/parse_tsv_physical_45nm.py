@@ -10,8 +10,8 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-RESULTS_DIR = ROOT / "experiments" / "tsv_physical_45nm" / "results"
-DATA_DIR = ROOT / "experiments" / "tsv_physical_45nm" / "data"
+RESULTS_DIR = ROOT / "experiments" / "exploratory_sweeps" / "tsv_physical_45nm" / "results"
+DATA_DIR = ROOT / "experiments" / "exploratory_sweeps" / "tsv_physical_45nm" / "data"
 OUT_CSV = DATA_DIR / "tsv_physical_45nm_results.csv"
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)

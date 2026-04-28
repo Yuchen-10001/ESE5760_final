@@ -1,4 +1,4 @@
-% fig6_tsv_sensitivity_latency.m
+% fig08_tsv_sensitivity_read_latency.m
 % TSV Parameter Sensitivity — Read Latency (3D SRAM @ 32nm) — ESE5760 Final Project
 % Baseline: LocalTSVProjection=0, GlobalTSVProjection=0, TSVRedundancy=1.0
 % All three TSV parameters have zero effect on read latency at this configuration.
@@ -44,4 +44,4 @@ sgtitle('TSV Parameter Sensitivity — Read Latency  (3D SRAM @ 32 nm)', 'FontSi
 
 drawnow;
 set(gcf, 'Renderer', 'painters');
-print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', 'plots', 'fig6_tsv_sensitivity_latency.jpg'));
+print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', '..', 'plots', 'tsv_sensitivity', 'fig08_tsv_sensitivity_read_latency.jpg'));

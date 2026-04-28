@@ -12,13 +12,13 @@ Sweep:
     layers: 1, 2, 4, 8, 16
 
 Output:
-    experiments/layer_sweep/configs/*.cfg
+    experiments/exploratory_sweeps/layer_sweep/configs/*.cfg
 """
 
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-OUT_DIR = ROOT / "experiments" / "layer_sweep" / "configs"
+OUT_DIR = ROOT / "experiments" / "exploratory_sweeps" / "layer_sweep" / "configs"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 CELL_SRAM = "config/sample_SRAM.cell"
