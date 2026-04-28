@@ -1,0 +1,223 @@
+User-defined configuration file (/home/simon/simonworkspace/ese576proj/ESE5760_final/experiments/layer_sweep/configs/SRAM_L8_32nm.cfg) is loaded
+
+
+====================
+DESIGN SPECIFICATION
+====================
+Design Target: Cache
+Capacity   : 2MB
+Cache Line Size: 32Bytes
+Cache Associativity: 1 Ways
+
+Searching for the best solution that is optimized for write energy-delay-product ...
+Using cell file: config/sample_SRAM.cell
+numSolutions = 309428 / numDesigns = 13977846
+
+=======================
+CACHE DESIGN -- SUMMARY
+=======================
+Access Mode: Normal
+Area:
+ - Total Area = 1.014mm^2
+ |--- Data Array Area = 980.006um x 784.751um = 0.778mm^2
+ |--- Tag Array Area  = 600.186um x 392.376um = 0.237mm^2
+Timing:
+ - Cache Hit Latency   = 0.338ns
+ - Cache Miss Latency  = 0.151ns
+ - Cache Write Latency = 0.172ns
+Power:
+ - Cache Hit Dynamic Energy   = 0.338nJ per access
+ - Cache Miss Dynamic Energy  = 0.338nJ per access
+ - Cache Write Dynamic Energy = 0.338nJ per access
+ - Cache Total Leakage Power  = 386.048mW
+ |--- Cache Data Array Leakage Power = 289.961mW
+ |--- Cache Tag Array Leakage Power  = 96.087mW
+
+CACHE DATA ARRAY DETAILS    
+    =============
+       SUMMARY   
+    =============
+    Optimized for: Write Energy-Delay-Product
+    Memory Cell: SRAM
+    Cell Area (F^2)    : 146.000 (14.600Fx10.000F)
+    Cell Aspect Ratio  : 1.460
+    SRAM Cell Access Transistor Width: 1.310F
+    SRAM Cell NMOS Width: 2.080F
+    SRAM Cell PMOS Width: 1.230F
+    
+    =============
+    CONFIGURATION
+    =============
+    Bank Organization: 128 x 256 x 8
+     - Row Activation   : 32 / 128 x 1
+     - Column Activation: 1 / 256 x 1
+    Mat Organization: 1 x 1
+     - Row Activation   : 1 / 1
+     - Column Activation: 1 / 1
+     - Subarray Size    : 8 Rows x 8 Columns
+    Mux Level:
+     - Senseamp Mux      : 1
+     - Output Level-1 Mux: 1
+     - Output Level-2 Mux: 1
+     - One set is partitioned into 1 rows
+    Local Wire:
+     - Wire Type :     Local Aggressive
+     - Repeater Type:     No Repeaters
+     - Low Swing :     No
+    Global Wire:
+     - Wire Type :     Global Aggressive
+     - Repeater Type:     No Repeaters
+     - Low Swing :     No
+    Buffer Design Style:     Latency-Optimized
+    =============
+       RESULT
+    =============
+    Area:
+     - Total Area = 980.006um x 784.751um = 777589.337um^2
+     |--- Mat Area      = 7.656um x 3.065um = 23.470um^2   (326.146%)
+     |--- Subarray Area = 5.956um x 3.065um = 18.258um^2   (419.237%)
+     |--- TSV Area      = 16.000um^2
+     - Area Efficiency = 322.569%
+    Timing:
+     -  Read Latency = 253.845ps
+     |--- TSV Latency    = 0.934ps
+     |--- H-Tree Latency = 162.783ps
+     |--- Mat Latency    = 90.128ps
+        |--- Predecoder Latency = 41.815ps
+        |--- Subarray Latency   = 48.313ps
+           |--- Row Decoder Latency = 25.483ps
+           |--- Bitline Latency     = 19.427ps
+           |--- Senseamp Latency    = 3.403ps
+           |--- Mux Latency         = 0.000ps
+           |--- Precharge Latency   = 17.953ps
+     - Write Latency = 171.987ps
+     |--- TSV Latency    = 0.467ps
+     |--- H-Tree Latency = 81.391ps
+     |--- Mat Latency    = 90.128ps
+        |--- Predecoder Latency = 41.815ps
+        |--- Subarray Latency   = 48.313ps
+           |--- Row Decoder Latency = 25.483ps
+           |--- Charge Latency      = 0.054ps
+     - Read Bandwidth  = 784.633GB/s
+     - Write Bandwidth = 662.343GB/s
+    Power:
+     -  Read Dynamic Energy = 288.765pJ
+     |--- TSV Dynamic Energy    = 232.264pJ
+     |--- H-Tree Dynamic Energy = 56.093pJ
+     |--- Mat Dynamic Energy    = 0.013pJ per mat
+        |--- Predecoder Dynamic Energy = 0.001pJ
+        |--- Subarray Dynamic Energy   = 0.012pJ per active subarray
+           |--- Row Decoder Dynamic Energy = 0.001pJ
+           |--- Mux Decoder Dynamic Energy = 0.002pJ
+           |--- Senseamp Dynamic Energy    = 0.003pJ
+           |--- Mux Dynamic Energy         = 0.000pJ
+           |--- Precharge Dynamic Energy   = 0.004pJ
+     - Write Dynamic Energy = 288.533pJ
+     |--- TSV Dynamic Energy    = 232.264pJ
+     |--- H-Tree Dynamic Energy = 56.093pJ
+     |--- Mat Dynamic Energy    = 0.005pJ per mat
+        |--- Predecoder Dynamic Energy = 0.001pJ
+        |--- Subarray Dynamic Energy   = 0.004pJ per active subarray
+           |--- Row Decoder Dynamic Energy = 0.001pJ
+           |--- Mux Decoder Dynamic Energy = 0.002pJ
+           |--- Mux Dynamic Energy         = 0.000pJ
+     - Leakage Power = 289.961mW
+     |--- TSV Leakage              = 0.000pW
+     |--- H-Tree Leakage Power     = 0.000pW
+     |--- Mat Leakage Power        = 1.106uW per mat
+
+CACHE TAG ARRAY DETAILS    
+    =============
+       SUMMARY   
+    =============
+    Optimized for: Write Energy-Delay-Product
+    Memory Cell: SRAM
+    Cell Area (F^2)    : 146.000 (14.600Fx10.000F)
+    Cell Aspect Ratio  : 1.460
+    SRAM Cell Access Transistor Width: 1.310F
+    SRAM Cell NMOS Width: 2.080F
+    SRAM Cell PMOS Width: 1.230F
+    
+    =============
+    CONFIGURATION
+    =============
+    Bank Organization: 64 x 64 x 8
+     - Row Activation   : 1 / 64 x 1
+     - Column Activation: 1 / 64 x 1
+    Mat Organization: 2 x 2
+     - Row Activation   : 2 / 2
+     - Column Activation: 2 / 2
+     - Subarray Size    : 2 Rows x 8 Columns
+    Mux Level:
+     - Senseamp Mux      : 1
+     - Output Level-1 Mux: 1
+     - Output Level-2 Mux: 1
+     - One set is partitioned into 1 rows
+    Local Wire:
+     - Wire Type :     Local Aggressive
+     - Repeater Type:     No Repeaters
+     - Low Swing :     No
+    Global Wire:
+     - Wire Type :     Global Aggressive
+     - Repeater Type:     No Repeaters
+     - Low Swing :     No
+    Buffer Design Style:     Latency-Optimized
+    =============
+       RESULT
+    =============
+    Area:
+     - Total Area = 600.186um x 392.376um = 236858.397um^2
+     |--- Mat Area      = 9.378um x 6.131um = 57.495um^2   (133.136%)
+     |--- Subarray Area = 3.153um x 3.065um = 9.665um^2   (197.990%)
+     |--- TSV Area      = 16.000um^2
+     - Area Efficiency = 132.371%
+    Timing:
+     -  Read Latency = 151.015ps
+     |--- TSV Latency    = 0.934ps
+     |--- H-Tree Latency = 46.397ps
+     |--- Mat Latency    = 103.685ps
+        |--- Predecoder Latency = 16.429ps
+        |--- Subarray Latency   = 35.945ps
+           |--- Row Decoder Latency = 23.276ps
+           |--- Bitline Latency     = 9.267ps
+           |--- Senseamp Latency    = 3.403ps
+           |--- Mux Latency         = 0.000ps
+           |--- Precharge Latency   = 9.447ps
+        |--- Comparator Latency  = 51.310ps
+     - Write Latency = 76.040ps
+     |--- TSV Latency    = 0.467ps
+     |--- H-Tree Latency = 23.198ps
+     |--- Mat Latency    = 52.375ps
+        |--- Predecoder Latency = 16.429ps
+        |--- Subarray Latency   = 35.945ps
+           |--- Row Decoder Latency = 23.276ps
+           |--- Charge Latency      = 0.003ps
+     - Read Bandwidth  = 180.862GB/s
+     - Write Bandwidth = 111.280GB/s
+    Power:
+     -  Read Dynamic Energy = 49.067pJ
+     |--- TSV Dynamic Energy    = 44.440pJ
+     |--- H-Tree Dynamic Energy = 4.549pJ
+     |--- Mat Dynamic Energy    = 0.078pJ per mat
+        |--- Predecoder Dynamic Energy = 0.035pJ
+        |--- Subarray Dynamic Energy   = 0.011pJ per active subarray
+           |--- Row Decoder Dynamic Energy = 0.001pJ
+           |--- Mux Decoder Dynamic Energy = 0.002pJ
+           |--- Senseamp Dynamic Energy    = 0.003pJ
+           |--- Mux Dynamic Energy         = 0.000pJ
+           |--- Precharge Dynamic Energy   = 0.004pJ
+     - Write Dynamic Energy = 49.038pJ
+     |--- TSV Dynamic Energy    = 44.440pJ
+     |--- H-Tree Dynamic Energy = 4.549pJ
+     |--- Mat Dynamic Energy    = 0.049pJ per mat
+        |--- Predecoder Dynamic Energy = 0.035pJ
+        |--- Subarray Dynamic Energy   = 0.003pJ per active subarray
+           |--- Row Decoder Dynamic Energy = 0.001pJ
+           |--- Mux Decoder Dynamic Energy = 0.002pJ
+           |--- Mux Dynamic Energy         = 0.000pJ
+     - Leakage Power = 96.087mW
+     |--- TSV Leakage              = 0.000pW
+     |--- H-Tree Leakage Power     = 0.000pW
+     |--- Mat Leakage Power        = 2.932uW per mat
+
+Finished!

@@ -2038,4 +2038,3 @@ void Technology::SetLayerCount(InputParameter *inputParameter, int layers)
 
     layerCount = layers;
 }
-

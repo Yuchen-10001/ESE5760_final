@@ -1,0 +1,11 @@
+technology,layers,node_nm,total_area_mm2,read_latency_ns,write_latency_ns,write_energy_nJ,leakage_power_mW,write_edp_nJ_ns,source
+SRAM,1,32,4.262,1.061,0.605,0.123,234.632,0.074415,experiments/results/2D_SRAM_32nm_output.txt
+SRAM,2,32,2.132,0.633,0.423,0.089,234.632,0.037647,experiments/results/3D_SRAM_32nm_output.txt
+SRAM,4,32,1.542,0.488,0.242,0.126,285.915,0.030492,experiments/layer_sweep/results_targeted_32nm/SRAM_L4_32nm_output.txt
+SRAM,8,32,1.014,0.338,0.172,0.338,386.048,0.058136,experiments/layer_sweep/results_targeted_32nm/SRAM_L8_32nm_output.txt
+SRAM,16,32,0.620,0.244,0.126,1.369,471.264,0.172494,experiments/layer_sweep/results_targeted_32nm/SRAM_L16_32nm_output.txt
+eDRAM,1,32,1.440,0.757,0.607,0.066,29.992,0.040062,experiments/results/2D_eDRAM_32nm_output.txt
+eDRAM,2,32,1.068,0.472,0.340,0.061,50.137,0.020740,experiments/results/3D_eDRAM_32nm_output.txt
+eDRAM,4,32,0.927,0.316,0.199,0.108,132.416,0.021492,experiments/layer_sweep/results_targeted_32nm/eDRAM_L4_32nm_output.txt
+eDRAM,8,32,1.199,0.337,0.141,0.339,352.322,0.047799,experiments/layer_sweep/results_targeted_32nm/eDRAM_L8_32nm_output.txt
+eDRAM,16,32,0.618,0.248,0.105,1.370,348.162,0.143850,experiments/layer_sweep/results_targeted_32nm/eDRAM_L16_32nm_output.txt
