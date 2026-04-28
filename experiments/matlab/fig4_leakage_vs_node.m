@@ -2,22 +2,24 @@
 % Total Leakage Power vs. Process Node — ESE5760 Final Project
 % Data: DESTINY simulation, 2MB / 256-bit / Assoc=1 / LOP / 350K / WriteEDP
 
-nodes = [65, 45, 32, 22];   % nm
+nodes = [180, 130, 90, 65, 45, 32, 22];   % nm
+x = 1:numel(nodes);                        % equal-spacing display positions
+node_labels = {'180 nm','130 nm','90 nm','65 nm','45 nm','32 nm','22 nm'};
 
-leak_2D_SRAM  = [124.012,  48.328, 234.632,  65.837];
-leak_3D_SRAM  = [145.831,  51.269, 234.632,  70.279];
-leak_2D_eDRAM = [ 24.507,   9.986,  29.992,   9.799];
-leak_3D_eDRAM = [107.014,  18.412,  50.137,  16.151];
+leak_2D_SRAM  = [10.571, 16.370, 32.787, 124.012, 48.328, 234.632, 65.837];
+leak_3D_SRAM  = [10.960, 16.986, 34.079, 145.831, 51.269, 234.632, 70.279];
+leak_2D_eDRAM = [ 2.367,  4.178, 10.721,  24.507,  9.986,  29.992,  9.799];
+leak_3D_eDRAM = [ 3.474,  5.360, 36.661, 107.014, 18.412,  50.137, 16.151];
 
 figure('Position', [100 100 700 500]);
 
-plot(nodes, leak_2D_SRAM,  '-o', 'Color', [0.122 0.467 0.706], 'LineWidth', 2, 'MarkerSize', 8); hold on;
-plot(nodes, leak_3D_SRAM,  '-s', 'Color', [1.000 0.498 0.055], 'LineWidth', 2, 'MarkerSize', 8);
-plot(nodes, leak_2D_eDRAM, '-^', 'Color', [0.173 0.627 0.173], 'LineWidth', 2, 'MarkerSize', 8);
-plot(nodes, leak_3D_eDRAM, '-d', 'Color', [0.839 0.153 0.157], 'LineWidth', 2, 'MarkerSize', 8);
+plot(x, leak_2D_SRAM,  '-o', 'Color', [0.122 0.467 0.706], 'LineWidth', 2, 'MarkerSize', 8); hold on;
+plot(x, leak_3D_SRAM,  '-s', 'Color', [1.000 0.498 0.055], 'LineWidth', 2, 'MarkerSize', 8);
+plot(x, leak_2D_eDRAM, '-^', 'Color', [0.173 0.627 0.173], 'LineWidth', 2, 'MarkerSize', 8);
+plot(x, leak_3D_eDRAM, '-d', 'Color', [0.839 0.153 0.157], 'LineWidth', 2, 'MarkerSize', 8);
 
-set(gca, 'XDir', 'reverse', 'XTick', nodes, 'XTickLabel', {'65 nm','45 nm','32 nm','22 nm'}, 'FontSize', 11);
-xlim([18 70]);
+set(gca, 'XTick', x, 'XTickLabel', node_labels, 'FontSize', 11);
+xlim([0.5 numel(nodes)+0.5]);
 xlabel('Process Node', 'FontSize', 13);
 ylabel('Total Leakage Power (mW)', 'FontSize', 13);
 title('Total Leakage Power vs. Process Node', 'FontSize', 14, 'FontWeight', 'bold');

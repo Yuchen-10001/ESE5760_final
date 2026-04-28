@@ -1,15 +1,15 @@
-% fig2_read_latency_vs_node.m
-% Read Latency (Cache Hit Latency) vs. Process Node — ESE5760 Final Project
+% fig15_write_latency_vs_node.m
+% Write Latency (Cache Write Latency) vs. Process Node — ESE5760 Final Project
 % Data: DESTINY simulation, 2MB / 256-bit / Assoc=1 / LOP / 350K / WriteEDP
 
 nodes = [180, 130, 90, 65, 45, 32, 22];   % nm
 x = 1:numel(nodes);                        % equal-spacing display positions
 node_labels = {'180 nm','130 nm','90 nm','65 nm','45 nm','32 nm','22 nm'};
 
-lat_2D_SRAM  = [16.429, 10.311, 14.165, 9.942, 0.939, 1.061, 1.184];
-lat_3D_SRAM  = [ 7.670,  5.401,  6.345, 4.698, 0.654, 0.633, 0.705];
-lat_2D_eDRAM = [ 1.762,  2.907,  1.164, 2.488, 0.663, 0.757, 0.790];
-lat_3D_eDRAM = [ 2.679,  1.915,  0.703, 0.538, 0.504, 0.472, 0.420];
+lat_2D_SRAM  = [11.758, 7.623, 10.088, 7.213, 0.526, 0.605, 0.710];
+lat_3D_SRAM  = [ 5.951, 4.321,  4.939, 3.740, 0.367, 0.423, 0.447];
+lat_2D_eDRAM = [ 1.277, 1.846,  0.965, 1.550, 0.453, 0.607, 0.579];
+lat_3D_eDRAM = [ 1.757, 1.303,  0.439, 0.347, 0.273, 0.340, 0.281];
 
 figure('Position', [100 100 700 500]);
 
@@ -21,8 +21,8 @@ plot(x, lat_3D_eDRAM, '-d', 'Color', [0.839 0.153 0.157], 'LineWidth', 2, 'Marke
 set(gca, 'XTick', x, 'XTickLabel', node_labels, 'FontSize', 11);
 xlim([0.5 numel(nodes)+0.5]);
 xlabel('Process Node', 'FontSize', 13);
-ylabel('Cache Hit Latency (ns)', 'FontSize', 13);
-title('Read Latency vs. Process Node', 'FontSize', 14, 'FontWeight', 'bold');
+ylabel('Cache Write Latency (ns)', 'FontSize', 13);
+title('Write Latency vs. Process Node', 'FontSize', 14, 'FontWeight', 'bold');
 legend('2D SRAM', '3D SRAM (2-die)', '2D eDRAM', '3D eDRAM (2-die)', ...
        'Location', 'northeast', 'FontSize', 11);
 grid on;
@@ -30,4 +30,4 @@ box on;
 
 drawnow;
 set(gcf, 'Renderer', 'painters');
-print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', 'plots', 'fig2_read_latency_vs_node.jpg'));
+print('-djpeg', '-r150', fullfile(fileparts(mfilename('fullpath')), '..', 'plots', 'fig15_write_latency_vs_node.jpg'));

@@ -1,0 +1,11 @@
+node_nm,real_process_node,destiny_supported,technology_cpp_model
+180,yes,yes,>=180 branch
+130,yes,yes,>=120 branch used for 130nm-class node
+90,yes,yes,>=90 branch
+65,yes,yes,>=65 branch
+45,yes,yes,>=45 branch
+32,yes,yes,>=32 branch
+22,yes,yes,>=22 branch
+14,yes,no,no branch below 22nm
+10,yes,no,no branch below 22nm
+7,yes,no,no branch below 22nm

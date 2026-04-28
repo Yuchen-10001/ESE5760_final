@@ -8,6 +8,7 @@ Metrics extracted (from CACHE DESIGN -- SUMMARY):
     total_area_mm2          Total Area (mm^2)
     read_latency_ns         Cache Hit Latency (ns)
     write_latency_ns        Cache Write Latency (ns)
+    read_energy_nJ          Cache Hit Dynamic Energy (nJ/access)
     write_energy_nJ         Cache Write Dynamic Energy (nJ/access)
     leakage_power_mW        Cache Total Leakage Power (mW)
 
@@ -38,6 +39,7 @@ PATTERNS = {
     "total_area_mm2":    re.compile(r"Total Area\s*=\s*([\d.]+)\s*mm\^2"),
     "read_latency_ns":   re.compile(r"Cache Hit Latency\s*=\s*([\d.]+)\s*ns"),
     "write_latency_ns":  re.compile(r"Cache Write Latency\s*=\s*([\d.]+)\s*ns"),
+    "read_energy_nJ":    re.compile(r"Cache Hit Dynamic Energy\s*=\s*([\d.]+)\s*nJ"),
     "write_energy_nJ":   re.compile(r"Cache Write Dynamic Energy\s*=\s*([\d.]+)\s*nJ"),
     "leakage_power_mW":  re.compile(r"Cache Total Leakage Power\s*=\s*([\d.]+)\s*mW"),
 }
@@ -46,7 +48,7 @@ FIELDNAMES = [
     "filename", "experiment", "technology", "node_nm",
     "tsv_param", "tsv_value",
     "total_area_mm2", "read_latency_ns", "write_latency_ns",
-    "write_energy_nJ", "leakage_power_mW",
+    "read_energy_nJ", "write_energy_nJ", "leakage_power_mW",
     "notes",
 ]
 

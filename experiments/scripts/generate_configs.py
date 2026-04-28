@@ -5,8 +5,11 @@ Generates all DESTINY config files for the ESE5760 Final Project.
 
 Experiment 1 — Node scaling sweep:
     4 technologies (2D_SRAM, 3D_SRAM, 2D_eDRAM, 3D_eDRAM)
-    × 4 process nodes (65 / 45 / 32 / 22 nm)
-    = 16 configs
+    × 7 DESTINY-supported real process nodes (180 / 130 / 90 / 65 / 45 / 32 / 22 nm)
+    = 28 configs
+
+Real advanced nodes 14 / 10 / 7 nm are intentionally not emitted because
+Technology.cpp has no device-model branch below 22nm.
 
 Experiment 2 — TSV sensitivity sweep (3D SRAM @ 32nm):
     Vary LocalTSVProjection  : 0 (baseline), 1, 2
@@ -30,7 +33,8 @@ CELL_SRAM      = "config/sample_SRAM.cell"
 CELL_EDRAM_2D  = "config/sample_2D_eDRAM.cell"
 CELL_EDRAM_3D  = "config/sample_3D_eDRAM.cell"
 
-NODES = [65, 45, 32, 22]
+SUPPORTED_NODES = [180, 130, 90, 65, 45, 32, 22]
+UNSUPPORTED_REAL_NODES = [14, 10, 7]
 
 # ---------------------------------------------------------------------------
 # Shared baseline block — same for all 25 configs
@@ -67,10 +71,23 @@ def tsv_block(local=0, global_tsv=0, redundancy=1.0):
 
 
 def write_cfg(filename, description, process_node, cell_file, extra_block=""):
+    project_line = "ESE5760 Final Project — Normalized baseline"
+    if filename.startswith("TSV_"):
+        project_line = "ESE5760 Final Project — Experiment 2: TSV sensitivity on 3D SRAM @ 32nm"
+
+    setup_line = "2MB | 256bit | Assoc=1 | LOP | 350K | WriteEDP"
+    if "RetentionTime" in extra_block:
+        setup_line += " | RetentionTime=40us"
+
     lines = [
         f"// {description}",
-        f"// ESE5760 Final Project — Normalized baseline",
-        f"// 2MB | 256bit | Assoc=1 | LOP | 350K | WriteEDP",
+        f"// {project_line}",
+        f"// {setup_line}",
+    ]
+    if filename == "3D_SRAM_32nm.cfg":
+        lines.append("// NOTE: This config also serves as the TSV sensitivity baseline (Exp 2)")
+
+    lines += [
         "",
         COMMON_BLOCK,
         f"-ProcessNode: {process_node}",
@@ -90,7 +107,7 @@ def write_cfg(filename, description, process_node, cell_file, extra_block=""):
 # ---------------------------------------------------------------------------
 print("Experiment 1 — node scaling sweep:")
 
-for node in NODES:
+for node in SUPPORTED_NODES:
 
     write_cfg(
         filename    = f"2D_SRAM_{node}nm.cfg",
@@ -161,5 +178,9 @@ for redund, label in [(1.2, "1p2"), (1.5, "1p5")]:
         extra_block = tsv_block(local=0, global_tsv=0, redundancy=redund),
     )
 
+print(
+    "\nSkipped unsupported real nodes (no Technology.cpp branch below 22nm): "
+    + ", ".join(f"{node}nm" for node in UNSUPPORTED_REAL_NODES)
+)
 print(f"\nDone. {len(list(CONFIGS_OUT.glob('*.cfg')))} configs written to:")
 print(f"  {CONFIGS_OUT}")
