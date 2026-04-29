@@ -13,8 +13,8 @@ Metrics extracted (from CACHE DESIGN -- SUMMARY):
     leakage_power_mW        Cache Total Leakage Power (mW)
 
 File naming convention (set by generate_configs.py):
-    <technology>_<node>nm_output.txt            -> Experiment 1
-    TSV_3D_SRAM_32nm_<param><value>_output.txt  -> Experiment 2
+    <technology>_<node>nm_output.txt             -> Experiment 1
+    TSV_3D_SRAM_32nm_<param><value>_output.txt   -> Experiment 2
 
 Run this script from any directory after run_all_experiments.ps1 completes.
 """
@@ -76,6 +76,7 @@ def parse_filename(stem: str) -> dict:
     Examples:
         2D_SRAM_65nm            -> experiment=1, tech=2D_SRAM,  node=65,  tsv_param='', tsv_value=''
         3D_eDRAM_22nm           -> experiment=1, tech=3D_eDRAM, node=22,  tsv_param='', tsv_value=''
+        2D_STTRAM_32nm          -> experiment=1, tech=2D_STTRAM, node=32, tsv_param='', tsv_value=''
         TSV_3D_SRAM_32nm_LocalTSV1   -> experiment=2, tech=3D_SRAM, node=32, tsv_param=LocalTSVProjection, tsv_value=1
         TSV_3D_SRAM_32nm_GlobalTSV2  -> experiment=2, tsv_param=GlobalTSVProjection, tsv_value=2
         TSV_3D_SRAM_32nm_Redundancy1p2 -> experiment=2, tsv_param=TSVRedundancy, tsv_value=1.2
@@ -111,7 +112,7 @@ def parse_filename(stem: str) -> dict:
 
     else:
         # Experiment 1  — format: <tech>_<node>nm
-        m = re.match(r"^(2D_SRAM|3D_SRAM|2D_eDRAM|3D_eDRAM)_(\d+)nm$", stem)
+        m = re.match(r"^(2D_SRAM|3D_SRAM|2D_eDRAM|3D_eDRAM|2D_STTRAM|3D_STTRAM|2D_PCRAM|3D_PCRAM|2D_RRAM|3D_RRAM)_(\d+)nm$", stem)
         if m:
             return {
                 "experiment":  1,
@@ -144,7 +145,16 @@ for path in output_files:
     notes = ""
     if any(v is None for v in metrics.values()):
         missing = [k for k, v in metrics.items() if v is None]
-        notes = f"missing: {', '.join(missing)}"
+        stderr_path = path.with_name(path.name.replace("_output.txt", "_stderr.txt"))
+        issue_notes = []
+        if stderr_path.exists() and "TIMEOUT" in decode_destiny_output(stderr_path):
+            issue_notes.append("timeout")
+        if "No valid solutions" in text:
+            issue_notes.append("no valid solutions")
+        if "Read current too large or too small" in text:
+            issue_notes.append("subarray read-current/precharge constraint")
+        prefix = "; ".join(issue_notes)
+        notes = f"{prefix}; missing: {', '.join(missing)}" if prefix else f"missing: {', '.join(missing)}"
         missing_metrics_count += 1
 
     row = {

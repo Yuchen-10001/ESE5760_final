@@ -1,0 +1,21 @@
+technology,node_nm,capacity_mb,routing,optimization_target,status,notes
+PCRAM,45,1,H-tree,Area,no_valid_solution,subarray read-current/precharge constraint
+PCRAM,45,1,H-tree,WriteEDP,no_valid_solution,subarray read-current/precharge constraint
+PCRAM,45,1,Non-H-tree,Area,no_valid_solution,subarray read-current/precharge constraint
+PCRAM,45,1,Non-H-tree,WriteEDP,no_valid_solution,subarray read-current/precharge constraint
+PCRAM,45,2,H-tree,Area,no_valid_solution,subarray read-current/precharge constraint
+PCRAM,45,2,H-tree,ReadLatency,no_valid_solution,subarray read-current/precharge constraint
+PCRAM,45,2,H-tree,WriteEDP,no_valid_solution,subarray read-current/precharge constraint
+PCRAM,45,2,Non-H-tree,Area,no_valid_solution,subarray read-current/precharge constraint
+PCRAM,45,2,Non-H-tree,ReadLatency,no_valid_solution,subarray read-current/precharge constraint
+PCRAM,45,2,Non-H-tree,WriteEDP,no_valid_solution,subarray read-current/precharge constraint
+RRAM,45,1,H-tree,Area,complete,
+RRAM,45,1,H-tree,WriteEDP,complete,
+RRAM,45,1,Non-H-tree,Area,complete,
+RRAM,45,1,Non-H-tree,WriteEDP,complete,
+RRAM,45,2,H-tree,Area,complete,
+RRAM,45,2,H-tree,ReadLatency,complete,
+RRAM,45,2,H-tree,WriteEDP,complete,
+RRAM,45,2,Non-H-tree,Area,complete,
+RRAM,45,2,Non-H-tree,ReadLatency,complete,
+RRAM,45,2,Non-H-tree,WriteEDP,complete,

@@ -1,0 +1,43 @@
+technology,organization,node_nm,status,notes
+STTRAM,2D,180,complete,
+STTRAM,2D,130,complete,
+STTRAM,2D,90,complete,
+STTRAM,2D,65,complete,
+STTRAM,2D,45,complete,
+STTRAM,2D,32,complete,
+STTRAM,2D,22,complete,
+STTRAM,3D,180,incomplete,timeout before summary metrics
+STTRAM,3D,130,incomplete,timeout before summary metrics
+STTRAM,3D,90,incomplete,timeout before summary metrics
+STTRAM,3D,65,incomplete,timeout before summary metrics
+STTRAM,3D,45,incomplete,timeout before summary metrics
+STTRAM,3D,32,incomplete,timeout before summary metrics
+STTRAM,3D,22,incomplete,timeout before summary metrics
+PCRAM,2D,180,incomplete,stopped before summary metrics
+PCRAM,2D,130,incomplete,timeout before summary metrics
+PCRAM,2D,90,no_output,not completed in this batch
+PCRAM,2D,65,no_output,not completed in this batch
+PCRAM,2D,45,incomplete,no valid solutions; subarray read-current/precharge constraint
+PCRAM,2D,32,no_output,not completed in this batch
+PCRAM,2D,22,no_output,not completed in this batch
+PCRAM,3D,180,no_output,not completed in this batch
+PCRAM,3D,130,no_output,not completed in this batch
+PCRAM,3D,90,no_output,not completed in this batch
+PCRAM,3D,65,no_output,not completed in this batch
+PCRAM,3D,45,no_output,not completed in this batch
+PCRAM,3D,32,no_output,not completed in this batch
+PCRAM,3D,22,no_output,not completed in this batch
+RRAM,2D,180,incomplete,stopped before summary metrics
+RRAM,2D,130,incomplete,timeout before summary metrics
+RRAM,2D,90,no_output,not completed in this batch
+RRAM,2D,65,no_output,not completed in this batch
+RRAM,2D,45,complete,
+RRAM,2D,32,no_output,not completed in this batch
+RRAM,2D,22,no_output,not completed in this batch
+RRAM,3D,180,no_output,not completed in this batch
+RRAM,3D,130,no_output,not completed in this batch
+RRAM,3D,90,no_output,not completed in this batch
+RRAM,3D,65,no_output,not completed in this batch
+RRAM,3D,45,no_output,not completed in this batch
+RRAM,3D,32,no_output,not completed in this batch
+RRAM,3D,22,no_output,not completed in this batch

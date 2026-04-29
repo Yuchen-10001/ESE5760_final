@@ -4,9 +4,10 @@ generate_configs.py
 Generates all DESTINY config files for the ESE5760 Final Project.
 
 Experiment 1 — Node scaling sweep:
-    4 technologies (2D_SRAM, 3D_SRAM, 2D_eDRAM, 3D_eDRAM)
+    10 technologies:
+        2D/3D SRAM, eDRAM, STT-RAM, PCRAM, and RRAM
     × 7 DESTINY-supported real process nodes (180 / 130 / 90 / 65 / 45 / 32 / 22 nm)
-    = 28 configs
+    = 70 configs
 
 Real advanced nodes 14 / 10 / 7 nm are intentionally not emitted because
 Technology.cpp has no device-model branch below 22nm.
@@ -32,6 +33,15 @@ CONFIGS_OUT.mkdir(parents=True, exist_ok=True)
 CELL_SRAM      = "config/sample_SRAM.cell"
 CELL_EDRAM_2D  = "config/sample_2D_eDRAM.cell"
 CELL_EDRAM_3D  = "config/sample_3D_eDRAM.cell"
+CELL_STTRAM    = "config/sample_STTRAM.cell"
+CELL_PCRAM     = "config/sample_PCRAM.cell"
+CELL_RRAM      = "config/sample_RRAM.cell"
+
+NVM_CELLS = [
+    ("STTRAM", CELL_STTRAM),
+    ("PCRAM", CELL_PCRAM),
+    ("RRAM", CELL_RRAM),
+]
 
 SUPPORTED_NODES = [180, 130, 90, 65, 45, 32, 22]
 UNSUPPORTED_REAL_NODES = [14, 10, 7]
@@ -140,6 +150,23 @@ for node in SUPPORTED_NODES:
         cell_file   = CELL_EDRAM_3D,
         extra_block = tsv_block(local=0, global_tsv=0, redundancy=1.0) + "\n-RetentionTime (us): 40",
     )
+
+    for tech_name, cell_file in NVM_CELLS:
+        write_cfg(
+            filename    = f"2D_{tech_name}_{node}nm.cfg",
+            description = f"2D {tech_name} at {node}nm",
+            process_node = node,
+            cell_file   = cell_file,
+            extra_block = "-StackedDieCount: 1",
+        )
+
+        write_cfg(
+            filename    = f"3D_{tech_name}_{node}nm.cfg",
+            description = f"3D {tech_name} at {node}nm  [TSV baseline: Local=0 Global=0 Redundancy=1.0]",
+            process_node = node,
+            cell_file   = cell_file,
+            extra_block = tsv_block(local=0, global_tsv=0, redundancy=1.0),
+        )
 
 # ---------------------------------------------------------------------------
 # Experiment 2: TSV sensitivity (3D SRAM @ 32nm)

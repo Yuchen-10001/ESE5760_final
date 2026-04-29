@@ -61,6 +61,12 @@ TECH_STYLE = {
     "3D_SRAM":  {"color": "#ff7f0e", "marker": "s",  "label": "3D SRAM (2-die)"},
     "2D_eDRAM": {"color": "#2ca02c", "marker": "^",  "label": "2D eDRAM"},
     "3D_eDRAM": {"color": "#d62728", "marker": "D",  "label": "3D eDRAM (2-die)"},
+    "2D_STTRAM": {"color": "#9467bd", "marker": "v", "label": "2D STT-RAM"},
+    "3D_STTRAM": {"color": "#8c564b", "marker": "P", "label": "3D STT-RAM (2-die)"},
+    "2D_PCRAM": {"color": "#e377c2", "marker": "X", "label": "2D PCRAM"},
+    "3D_PCRAM": {"color": "#7f7f7f", "marker": "*", "label": "3D PCRAM (2-die)"},
+    "2D_RRAM": {"color": "#bcbd22", "marker": "<", "label": "2D RRAM"},
+    "3D_RRAM": {"color": "#17becf", "marker": ">", "label": "3D RRAM (2-die)"},
 }
 
 TSV_PARAM_LABEL = {

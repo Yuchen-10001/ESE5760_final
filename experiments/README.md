@@ -23,6 +23,12 @@ Figure order:
 
 The node-sweep MATLAB scripts use equal-spaced x positions with real process-node labels.
 
+The regular node-sweep config generator now emits 2D/3D configs for SRAM,
+eDRAM, STT-RAM, PCRAM, and RRAM across 180, 130, 90, 65, 45, 32, and 22 nm.
+Some NVM runs can be very slow under the shared 2 MB, H-tree, WriteEDP
+optimization setup. In `data/results.csv`, incomplete or timed-out runs are
+kept with a `notes` entry instead of being treated as valid metric rows.
+
 ## TSV Sensitivity
 
 The focused 3D SRAM TSV sensitivity figures live in:
