@@ -1,0 +1,2 @@
+source_config,technology,node_nm,capacity_mb,associativity,device_roadmap,routing,optimization_target,stacked_die_count,total_area_mm2,read_latency_ns,write_latency_ns,read_energy_nJ,write_energy_nJ,leakage_power_mW,runtime_s,notes
+config/sample_PCRAM.cfg,PCRAM,32,32,16,HP,H-tree,WriteEDP,1,1.848,9.402,154.710,0.172,4.632,1443.385,214,DESTINY bundled sample config; not directly comparable to 2MB LOP main sweep

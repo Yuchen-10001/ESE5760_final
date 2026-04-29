@@ -1,0 +1,66 @@
+filename,experiment,technology,node_nm,tsv_param,tsv_value,total_area_mm2,read_latency_ns,write_latency_ns,read_energy_nJ,write_energy_nJ,leakage_power_mW,notes,read_edp_nJ_ns,write_edp_nJ_ns
+2D_PCRAM_130nm_output.txt,1,2D_PCRAM,130,,,,,,,,,"timeout; missing: total_area_mm2, read_latency_ns, write_latency_ns, read_energy_nJ, write_energy_nJ, leakage_power_mW",,
+2D_PCRAM_180nm_output.txt,1,2D_PCRAM,180,,,,,,,,,"missing: total_area_mm2, read_latency_ns, write_latency_ns, read_energy_nJ, write_energy_nJ, leakage_power_mW",,
+2D_PCRAM_45nm_output.txt,1,2D_PCRAM,45,,,,,,,,,"no valid solutions; subarray read-current/precharge constraint; missing: total_area_mm2, read_latency_ns, write_latency_ns, read_energy_nJ, write_energy_nJ, leakage_power_mW",,
+2D_RRAM_130nm_output.txt,1,2D_RRAM,130,,,4.275,2.772,9.502,0.151,0.31,0.963,,0.418572,2.94562
+2D_RRAM_180nm_output.txt,1,2D_RRAM,180,,,8.151,3.775,10.067,0.273,0.396,0.612,,1.03058,3.98653
+2D_RRAM_22nm_output.txt,1,2D_RRAM,22,,,0.246,2.213,8.429,0.059,0.193,10.497,,0.130567,1.6268
+2D_RRAM_32nm_output.txt,1,2D_RRAM,32,,,0.396,2.465,8.756,0.077,0.208,24.378,,0.189805,1.82125
+2D_RRAM_45nm_output.txt,1,2D_RRAM,45,,,0.865,3.068,9.207,0.062,0.203,2.416,,0.190216,1.86902
+2D_RRAM_65nm_output.txt,1,2D_RRAM,65,,,1.191,2.505,9.12,0.079,0.222,7.951,,0.197895,2.02464
+2D_RRAM_90nm_output.txt,1,2D_RRAM,90,,,2.263,3.246,9.572,0.131,0.255,2.951,,0.425226,2.44086
+2D_SRAM_130nm_output.txt,1,2D_SRAM,130,,,49.407,10.311,7.623,1.057,0.089,16.37,,10.8987,0.678447
+2D_SRAM_180nm_output.txt,1,2D_SRAM,180,,,94.721,16.429,11.758,1.995,0.168,10.571,,32.7759,1.97534
+2D_SRAM_22nm_output.txt,1,2D_SRAM,22,,,1.836,1.184,0.71,0.035,0.035,65.837,,0.04144,0.02485
+2D_SRAM_32nm_output.txt,1,2D_SRAM,32,,,4.262,1.061,0.605,0.123,0.123,234.632,,0.130503,0.074415
+2D_SRAM_45nm_output.txt,1,2D_SRAM,45,,,8.893,0.939,0.526,0.174,0.173,48.328,,0.163386,0.090998
+2D_SRAM_65nm_output.txt,1,2D_SRAM,65,,,12.348,9.942,7.213,0.266,0.022,124.012,,2.64457,0.158686
+2D_SRAM_90nm_output.txt,1,2D_SRAM,90,,,23.68,14.165,10.088,0.483,0.041,32.787,,6.84169,0.413608
+2D_STTRAM_130nm_output.txt,1,2D_STTRAM,130,,,8.778,5.096,7.34,0.298,0.3,2.315,,1.51861,2.202
+2D_STTRAM_180nm_output.txt,1,2D_STTRAM,180,,,18.009,4.255,6.674,0.519,0.676,1.357,,2.20835,4.51162
+2D_STTRAM_22nm_output.txt,1,2D_STTRAM,22,,,0.34,2.09,4.389,0.08,0.091,10.997,,0.1672,0.399399
+2D_STTRAM_32nm_output.txt,1,2D_STTRAM,32,,,0.405,2.377,4.92,0.087,0.117,17.695,,0.206799,0.57564
+2D_STTRAM_45nm_output.txt,1,2D_STTRAM,45,,,1.368,2.034,4.869,0.096,0.134,3.713,,0.195264,0.652446
+2D_STTRAM_65nm_output.txt,1,2D_STTRAM,65,,,2.385,2.678,5.498,0.105,0.156,11.343,,0.28119,0.857688
+2D_STTRAM_90nm_output.txt,1,2D_STTRAM,90,,,4.577,3.528,6.193,0.169,0.232,4.335,,0.596232,1.43678
+2D_eDRAM_130nm_output.txt,1,2D_eDRAM,130,,,23.844,2.907,1.846,0.359,0.346,4.178,,1.04361,0.638716
+2D_eDRAM_180nm_output.txt,1,2D_eDRAM,180,,,38.646,1.762,1.277,1.152,1.158,2.367,,2.02982,1.47877
+2D_eDRAM_22nm_output.txt,1,2D_eDRAM,22,,,0.63,0.79,0.579,0.019,0.019,9.799,,0.01501,0.011001
+2D_eDRAM_32nm_output.txt,1,2D_eDRAM,32,,,1.44,0.757,0.607,0.066,0.066,29.992,,0.049962,0.040062
+2D_eDRAM_45nm_output.txt,1,2D_eDRAM,45,,,4.555,0.663,0.453,0.117,0.117,9.986,,0.077571,0.053001
+2D_eDRAM_65nm_output.txt,1,2D_eDRAM,65,,,5.957,2.488,1.55,0.098,0.092,24.507,,0.243824,0.1426
+2D_eDRAM_90nm_output.txt,1,2D_eDRAM,90,,,11.789,1.164,0.965,0.33,0.331,10.721,,0.38412,0.319415
+3D_RRAM_130nm_output.txt,1,3D_RRAM,130,,,3.474,2.766,9.4,0.152,0.284,1.345,,0.420432,2.6696
+3D_RRAM_180nm_output.txt,1,3D_RRAM,180,,,6.258,3.694,10.074,0.173,0.343,0.601,,0.639062,3.45538
+3D_RRAM_22nm_output.txt,1,3D_RRAM,22,,,0.21,2.202,8.407,0.059,0.188,17.383,,0.129918,1.58052
+3D_RRAM_32nm_output.txt,1,3D_RRAM,32,,,0.291,2.348,8.751,0.062,0.2,18.583,,0.145576,1.7502
+3D_RRAM_45nm_output.txt,1,3D_RRAM,45,,,0.55,1.91,8.594,0.066,0.207,3.826,,0.12606,1.77896
+3D_RRAM_65nm_output.txt,1,3D_RRAM,65,,,0.994,2.427,8.985,0.08,0.214,12.556,,0.19416,1.92279
+3D_RRAM_90nm_output.txt,1,3D_RRAM,90,,,1.666,3.127,9.575,0.095,0.238,2.74,,0.297065,2.27885
+3D_SRAM_130nm_output.txt,1,3D_SRAM,130,,,25.035,5.401,4.321,0.542,0.087,16.986,,2.92734,0.375927
+3D_SRAM_180nm_output.txt,1,3D_SRAM,180,,,47.988,7.67,5.951,1.021,0.162,10.96,,7.83107,0.964062
+3D_SRAM_22nm_output.txt,1,3D_SRAM,22,,,0.969,0.705,0.447,0.027,0.027,70.279,,0.019035,0.012069
+3D_SRAM_32nm_output.txt,1,3D_SRAM,32,,,2.132,0.633,0.423,0.09,0.089,234.632,,0.05697,0.037647
+3D_SRAM_45nm_output.txt,1,3D_SRAM,45,,,5.245,0.654,0.367,0.133,0.132,51.269,,0.086982,0.048444
+3D_SRAM_65nm_output.txt,1,3D_SRAM,65,,,7.105,4.698,3.74,0.138,0.037,145.831,,0.648324,0.13838
+3D_SRAM_90nm_output.txt,1,3D_SRAM,90,,,12.002,6.345,4.939,0.249,0.042,34.079,,1.5799,0.207438
+3D_STTRAM_130nm_output.txt,1,3D_STTRAM,130,,,,,,,,,"timeout; missing: total_area_mm2, read_latency_ns, write_latency_ns, read_energy_nJ, write_energy_nJ, leakage_power_mW",,
+3D_STTRAM_180nm_output.txt,1,3D_STTRAM,180,,,,,,,,,"timeout; missing: total_area_mm2, read_latency_ns, write_latency_ns, read_energy_nJ, write_energy_nJ, leakage_power_mW",,
+3D_STTRAM_22nm_output.txt,1,3D_STTRAM,22,,,,,,,,,"timeout; missing: total_area_mm2, read_latency_ns, write_latency_ns, read_energy_nJ, write_energy_nJ, leakage_power_mW",,
+3D_STTRAM_32nm_output.txt,1,3D_STTRAM,32,,,,,,,,,"timeout; missing: total_area_mm2, read_latency_ns, write_latency_ns, read_energy_nJ, write_energy_nJ, leakage_power_mW",,
+3D_STTRAM_45nm_output.txt,1,3D_STTRAM,45,,,,,,,,,"timeout; missing: total_area_mm2, read_latency_ns, write_latency_ns, read_energy_nJ, write_energy_nJ, leakage_power_mW",,
+3D_STTRAM_65nm_output.txt,1,3D_STTRAM,65,,,,,,,,,"timeout; missing: total_area_mm2, read_latency_ns, write_latency_ns, read_energy_nJ, write_energy_nJ, leakage_power_mW",,
+3D_STTRAM_90nm_output.txt,1,3D_STTRAM,90,,,,,,,,,"timeout; missing: total_area_mm2, read_latency_ns, write_latency_ns, read_energy_nJ, write_energy_nJ, leakage_power_mW",,
+3D_eDRAM_130nm_output.txt,1,3D_eDRAM,130,,,12.001,1.915,1.303,0.282,0.283,5.36,,0.54003,0.368749
+3D_eDRAM_180nm_output.txt,1,3D_eDRAM,180,,,22.978,2.679,1.757,0.527,0.527,3.474,,1.41183,0.925939
+3D_eDRAM_22nm_output.txt,1,3D_eDRAM,22,,,0.55,0.42,0.281,0.022,0.021,16.151,,0.00924,0.005901
+3D_eDRAM_32nm_output.txt,1,3D_eDRAM,32,,,1.068,0.472,0.34,0.061,0.061,50.137,,0.028792,0.02074
+3D_eDRAM_45nm_output.txt,1,3D_eDRAM,45,,,3.125,0.504,0.273,0.103,0.102,18.412,,0.051912,0.027846
+3D_eDRAM_65nm_output.txt,1,3D_eDRAM,65,,,7.743,0.538,0.347,0.207,0.206,107.014,,0.111366,0.071482
+3D_eDRAM_90nm_output.txt,1,3D_eDRAM,90,,,14.848,0.703,0.439,0.392,0.39,36.661,,0.275576,0.17121
+TSV_3D_SRAM_32nm_GlobalTSV1_output.txt,2,3D_SRAM,32,GlobalTSVProjection,1,2.149,0.633,0.423,0.09,0.09,234.632,,0.05697,0.03807
+TSV_3D_SRAM_32nm_GlobalTSV2_output.txt,2,3D_SRAM,32,GlobalTSVProjection,2,2.133,0.633,0.423,0.091,0.09,234.632,,0.057603,0.03807
+TSV_3D_SRAM_32nm_LocalTSV1_output.txt,2,3D_SRAM,32,LocalTSVProjection,1,2.25,0.633,0.423,0.093,0.093,234.632,,0.058869,0.039339
+TSV_3D_SRAM_32nm_LocalTSV2_output.txt,2,3D_SRAM,32,LocalTSVProjection,2,2.139,0.633,0.423,0.095,0.095,234.632,,0.060135,0.040185
+TSV_3D_SRAM_32nm_Redundancy1p2_output.txt,2,3D_SRAM,32,TSVRedundancy,1.2,2.132,0.633,0.423,0.09,0.09,234.632,,0.05697,0.03807
+TSV_3D_SRAM_32nm_Redundancy1p5_output.txt,2,3D_SRAM,32,TSVRedundancy,1.5,2.133,0.633,0.423,0.091,0.09,234.632,,0.057603,0.03807

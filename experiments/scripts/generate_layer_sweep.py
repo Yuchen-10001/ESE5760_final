@@ -11,6 +11,9 @@ Sweep:
     process node: 65, 45, 32, 22 nm
     layers: 1, 2, 4, 8, 16
 
+Additional focused sweep:
+    RRAM at 45 nm, layers 1, 2, 4
+
 Output:
     experiments/exploratory_sweeps/layer_sweep/configs/*.cfg
 """
@@ -24,6 +27,7 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 CELL_SRAM = "config/sample_SRAM.cell"
 CELL_EDRAM_2D = "config/sample_2D_eDRAM.cell"
 CELL_EDRAM_3D = "config/sample_3D_eDRAM.cell"
+CELL_RRAM = "config/sample_RRAM.cell"
 
 NODES = [65, 45, 32, 22]
 LAYERS = [1, 2, 4, 8, 16]
@@ -105,6 +109,18 @@ def main() -> None:
                 is_edram=True,
             )
             count += 1
+
+    for layers in [1, 2, 4]:
+        rram_name = f"RRAM_L{layers}_45nm.cfg"
+        write_cfg(
+            OUT_DIR / rram_name,
+            f"RRAM focused layer sweep at 45nm ({layers} layer)",
+            45,
+            CELL_RRAM,
+            layers,
+            is_edram=False,
+        )
+        count += 1
 
     print(f"Wrote {count} configs to {OUT_DIR}")
 

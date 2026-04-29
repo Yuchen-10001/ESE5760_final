@@ -19,6 +19,7 @@ PATTERNS = {
     "total_area_mm2": re.compile(r"Total Area\s*=\s*([\d.]+)\s*mm\^2"),
     "read_latency_ns": re.compile(r"Cache Hit Latency\s*=\s*([\d.]+)\s*ns"),
     "write_latency_ns": re.compile(r"Cache Write Latency\s*=\s*([\d.]+)\s*ns"),
+    "read_energy_nJ": re.compile(r"Cache Hit Dynamic Energy\s*=\s*([\d.]+)\s*nJ"),
     "write_energy_nJ": re.compile(r"Cache Write Dynamic Energy\s*=\s*([\d.]+)\s*nJ"),
     "leakage_power_mW": re.compile(r"Cache Total Leakage Power\s*=\s*([\d.]+)\s*mW"),
     "refresh_latency_us": re.compile(r"Cache Refresh Latency\s*=\s*([\d.]+)\s*us"),
@@ -32,7 +33,10 @@ FIELDS = [
     "total_area_mm2",
     "read_latency_ns",
     "write_latency_ns",
+    "read_energy_nJ",
     "write_energy_nJ",
+    "read_edp_nJ_ns",
+    "write_edp_nJ_ns",
     "leakage_power_mW",
     "refresh_latency_us",
 ]
@@ -48,7 +52,7 @@ def decode_text(path: Path) -> str:
 
 
 def parse_name(stem: str) -> tuple[str, int, int]:
-    m = re.match(r"^(SRAM|eDRAM)_L(\d+)_(\d+)nm_output$", stem)
+    m = re.match(r"^(SRAM|eDRAM|RRAM)_L(\d+)_(\d+)nm_output$", stem)
     if not m:
         raise ValueError(f"Unexpected filename: {stem}")
     return m.group(1), int(m.group(2)), int(m.group(3))
@@ -68,6 +72,16 @@ def main() -> None:
         for key, pattern in PATTERNS.items():
             match = pattern.search(text)
             row[key] = float(match.group(1)) if match else ""
+        row["read_edp_nJ_ns"] = (
+            row["read_latency_ns"] * row["read_energy_nJ"]
+            if row["read_latency_ns"] != "" and row["read_energy_nJ"] != ""
+            else ""
+        )
+        row["write_edp_nJ_ns"] = (
+            row["write_latency_ns"] * row["write_energy_nJ"]
+            if row["write_latency_ns"] != "" and row["write_energy_nJ"] != ""
+            else ""
+        )
         rows.append(row)
 
     with OUT_CSV.open("w", newline="") as f:

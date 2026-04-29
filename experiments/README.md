@@ -23,6 +23,15 @@ Figure order:
 
 The node-sweep MATLAB scripts use equal-spaced x positions with real process-node labels.
 
+Derived EDP and normalized-to-2D data live in:
+
+- `data/results_with_edp.csv`
+- `data/normalized_to_2d_baseline.csv`
+- Figures: `plots/edp_normalized/`
+
+These files are derived from `data/results.csv`; no extra DESTINY runs are
+needed for EDP.
+
 The regular node-sweep config generator now emits 2D/3D configs for SRAM,
 eDRAM, STT-RAM, PCRAM, and RRAM across 180, 130, 90, 65, 45, 32, and 22 nm.
 Some NVM runs can be very slow under the shared 2 MB, H-tree, WriteEDP
@@ -52,3 +61,10 @@ Large auxiliary sweeps are isolated under:
 - Figures: `plots/exploratory_sweeps/`
 
 This includes layer-count sweeps, TSV multinode sweeps, and TSV physical-parameter sweeps.
+
+The layer-count sweep includes SRAM/eDRAM across 22, 32, 45, and 65 nm. A
+focused RRAM 45 nm layer-count sweep is also included for 1, 2, and 4 stacked
+dies. A compact report-ready subset lives in:
+
+- `exploratory_sweeps/layer_sweep/data/layer_sweep_focus_1_2_4.csv`
+- Figures: `plots/layer_focus/`
