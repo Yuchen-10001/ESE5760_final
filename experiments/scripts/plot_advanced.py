@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-plot_advanced.py  —  v3
+plot_advanced.py  —  v4
 Advanced visualizations for experiments/data/results.csv.
 
 Valid technologies (experiment 1, data complete):
@@ -12,7 +12,7 @@ Skipped (all NaN / timeout):
 Output (experiments/plots/advanced_viz/):
   heatmap_all_metrics.png + heatmap_<metric>.png ×6
   radar_22nm.png  radar_45nm.png  radar_90nm.png
-  ppa_scatter.png   (2-panel: Volatile | Non-volatile)
+    → each is a 2×2 grid: SRAM | eDRAM / RRAM | STTRAM
 
 Requires: matplotlib >= 3.5, pandas, numpy
 """
@@ -89,12 +89,12 @@ TECH_COLOR = {
 
 TECH_MARKER = {
     "2D_SRAM":   "o",
-    "3D_SRAM":   "s",
-    "2D_eDRAM":  "^",
-    "3D_eDRAM":  "D",
-    "2D_RRAM":   "P",
-    "3D_RRAM":   "X",
-    "2D_STTRAM": "v",
+    "3D_SRAM":   "o",
+    "2D_eDRAM":  "o",
+    "3D_eDRAM":  "o",
+    "2D_RRAM":   "o",
+    "3D_RRAM":   "o",
+    "2D_STTRAM": "o",
 }
 
 # Solid = 2D, dashed = 3D (consistent convention)
@@ -122,9 +122,20 @@ RADAR_LABELS = [
     "Leakage\nPower",
 ]
 
-# PPA grouping
-VOLATILE    = ["2D_SRAM", "3D_SRAM", "2D_eDRAM", "3D_eDRAM"]
-NONVOLATILE = ["2D_RRAM", "3D_RRAM", "2D_STTRAM"]
+# Technology families for the 2×2 radar grid
+RADAR_FAMILIES = [
+    ("SRAM",   ["2D_SRAM",  "3D_SRAM"]),
+    ("eDRAM",  ["2D_eDRAM", "3D_eDRAM"]),
+    ("RRAM",   ["2D_RRAM",  "3D_RRAM"]),
+    ("STTRAM", ["2D_STTRAM"]),
+]
+
+FAMILY_BG = {
+    "SRAM":   "#FFF5EC",
+    "eDRAM":  "#EFF8EF",
+    "RRAM":   "#F2EFFA",
+    "STTRAM": "#FBF0F6",
+}
 
 
 def save(fig, name):
@@ -162,7 +173,6 @@ def _draw_single_heatmap(ax, metric, label, ann_fs=10):
         for c in range(len(TECH_ORDER)):
             v = raw[r, c]
             if np.isnan(v):
-                # Grey hatching for missing cells
                 ax.add_patch(plt.Rectangle(
                     (c - 0.5, r - 0.5), 1, 1,
                     fill=True, color="#DDDDDD", zorder=2,
@@ -182,7 +192,6 @@ def _draw_single_heatmap(ax, metric, label, ann_fs=10):
     ax.set_yticklabels([f"{n}nm" for n in NODE_ORDER], fontsize=10)
     ax.set_title(label, fontsize=12, fontweight="bold", pad=8)
 
-    # White cell-border grid via minor ticks
     ax.set_xticks(np.arange(-0.5, len(TECH_ORDER), 1), minor=True)
     ax.set_yticks(np.arange(-0.5, len(NODE_ORDER), 1), minor=True)
     ax.grid(which="minor", color="white", linewidth=2)
@@ -190,7 +199,6 @@ def _draw_single_heatmap(ax, metric, label, ann_fs=10):
 
 
 def plot_heatmap_combined():
-    # 7 columns → wider figure
     fig, axes = plt.subplots(2, 3, figsize=(26, 13))
     fig.patch.set_facecolor("white")
     fig.suptitle(
@@ -236,197 +244,143 @@ def plot_heatmap_individual():
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 2.  RADAR CHARTS  (custom-drawn grid, 7 technologies)
+# 2.  RADAR CHARTS  —  2×2 grid (SRAM | eDRAM / RRAM | STTRAM)
+#     Convention: smaller metric value = better = larger radius (center = worst)
+#     Normalization is global across all 7 technologies so subplots are comparable
 # ─────────────────────────────────────────────────────────────────────────────
-def plot_radar(node_nm):
-    N      = len(METRIC_KEYS)
-    angles = np.linspace(0, 2 * np.pi, N, endpoint=False)
+def _draw_radar_panel(ax, family_techs, family_name, tech_vals, mins, maxs,
+                      angles, angles_closed, full_circle):
+    """Draw one family's radar panel onto a polar Axes."""
+    N = len(METRIC_KEYS)
+    RING_COLOR = "#C0C0C0"
 
-    node_data = exp1[exp1["node_nm"] == node_nm]
-    tech_vals = {}
-    for tech in TECH_ORDER:
-        row = node_data[node_data["technology"] == tech]
-        if not row.empty:
-            vals = np.array([row[m].values[0] for m in METRIC_KEYS],
-                            dtype=float)
-            if not np.all(np.isnan(vals)):
-                tech_vals[tech] = vals
-    if not tech_vals:
-        return
-
-    mins = np.array([
-        min((v[i] for v in tech_vals.values() if not np.isnan(v[i])),
-            default=np.nan)
-        for i in range(N)
-    ])
-    maxs = np.array([
-        max((v[i] for v in tech_vals.values() if not np.isnan(v[i])),
-            default=np.nan)
-        for i in range(N)
-    ])
-
-    def to_radius(vals):
-        r = np.where(
-            (maxs == mins) | np.isnan(vals),
-            1.0,
-            0.15 + 0.85 * (1.0 - (vals - mins) / (maxs - mins + 1e-12)),
-        )
-        return np.append(r, r[0])
-
-    angles_closed = np.append(angles, angles[0])
-    full_circle   = np.linspace(0, 2 * np.pi, 300)
-
-    fig = plt.figure(figsize=(8.5, 8.5), facecolor="white")
-    ax  = fig.add_subplot(111, polar=True)
-    ax.set_facecolor("#F6F6F6")
+    ax.set_facecolor(FAMILY_BG[family_name])
     ax.set_theta_offset(np.pi / 2)
     ax.set_theta_direction(-1)
-
     ax.yaxis.grid(False)
     ax.xaxis.grid(False)
     ax.set_yticks([])
     ax.spines["polar"].set_visible(False)
 
-    RING_VALS  = [0.25, 0.5, 0.75, 1.0]
-    RING_COLOR = "#C8C8C8"
-
-    ax.fill(full_circle, [1.0] * 300, color="#EFEFEF", zorder=0, alpha=0.6)
-
-    for rv in RING_VALS:
-        ax.plot(full_circle, [rv] * 300,
+    # Concentric rings at 25 / 50 / 75 / 100 %
+    for rv in [0.25, 0.5, 0.75, 1.0]:
+        ax.plot(full_circle, [rv] * len(full_circle),
                 color=RING_COLOR,
-                linewidth=0.8 if rv < 1.0 else 1.4,
+                linewidth=1.0 if rv < 1.0 else 1.8,
                 linestyle="--" if rv < 1.0 else "-",
-                alpha=0.9, zorder=1)
+                alpha=0.85, zorder=1)
 
+    # Spoke lines
     for a in angles:
         ax.plot([a, a], [0, 1.0],
-                color=RING_COLOR, linewidth=0.9, alpha=0.8, zorder=1)
+                color=RING_COLOR, linewidth=0.8, alpha=0.7, zorder=1)
 
-    label_a = angles[0]
-    for rv, lbl in zip([0.25, 0.5, 0.75], ["25%", "50%", "75%"]):
-        ax.text(label_a + 0.22, rv, lbl,
+    # Percentage labels on the first spoke (Area, top)
+    for rv, lbl in zip([0.0, 0.25, 0.5, 0.75, 1.0],
+                       ["0%", "25%", "50%", "75%", "100%"]):
+        ax.text(angles[0] + 0.18, rv, lbl,
                 ha="left", va="center",
-                fontsize=8, color="#AAAAAA", zorder=5)
+                fontsize=9, color="#999999", zorder=5)
 
-    # Use alternating alpha so overlapping polygons stay readable
-    for idx, tech in enumerate(TECH_ORDER):
+    def to_radius(vals):
+        # Inverted: smaller value (better) → larger radius.
+        # Floor at 0.15 so no technology collapses to the center.
+        norm = np.where(
+            (maxs == mins) | np.isnan(vals),
+            0.85,   # tie / missing → show at 85% (near outer ring)
+            np.clip(1.0 - (vals - mins) / (maxs - mins + 1e-12), 0.0, 1.0),
+        )
+        r = 0.15 + 0.85 * norm
+        return np.append(r, r[0])
+
+    for tech in family_techs:
         if tech not in tech_vals:
             continue
         r   = to_radius(tech_vals[tech])
         col = TECH_COLOR[tech]
 
-        ax.fill(angles_closed, r, alpha=0.14, color=col, zorder=2)
+        ax.fill(angles_closed, r, alpha=0.22, color=col, zorder=2)
         ax.plot(angles_closed, r,
-                linewidth=2.5, color=col,
+                linewidth=2.2, color=col,
                 linestyle=TECH_LS[tech],
                 label=TECH_LABEL[tech], zorder=3,
                 solid_capstyle="round", dash_capstyle="round")
-        ax.scatter(angles, r[:-1], s=50, c=col,
-                   edgecolors="white", linewidths=1.6, zorder=4)
+        ax.scatter(angles, r[:-1], s=45, c=col,
+                   edgecolors="white", linewidths=1.5, zorder=4)
 
     ax.set_xticks(angles)
-    ax.set_xticklabels(RADAR_LABELS, fontsize=11,
-                       fontweight="bold", color="#333333")
-    ax.tick_params(axis="x", pad=16)   # push spoke labels clearly outside the ring
-    ax.set_ylim(0, 1.10)               # outer boundary tight; labels sit beyond via pad
+    ax.set_xticklabels(RADAR_LABELS, fontsize=13, fontweight="bold",
+                       color="#333333")
+    ax.tick_params(axis="x", pad=5)
+    ax.set_ylim(0, 1.05)
 
-    ax.set_title(f"PPA Radar  —  {node_nm} nm",
-                 fontsize=14, fontweight="bold", color="#222222", pad=18)
+    ax.set_title(family_name, fontsize=15, fontweight="bold",
+                 color="#222222", pad=6)
 
-    leg = ax.legend(
-        loc="lower center", bbox_to_anchor=(0.5, -0.20),
-        ncol=4, fontsize=9.5, frameon=True,
-        framealpha=0.95, edgecolor="#CCCCCC",
-        title="Technology", title_fontsize=10,
-    )
-    leg.get_title().set_fontfamily("Times New Roman")
-    for txt in leg.get_texts():
-        txt.set_fontfamily("Times New Roman")
+    handles, labels = ax.get_legend_handles_labels()
+    if handles:
+        # Place legend inside the circle at lower-right to avoid overlapping
+        # with spoke labels outside the axes boundary.
+        ax.legend(
+            handles, labels,
+            loc="lower right", bbox_to_anchor=(1.18, -0.02),
+            ncol=1, fontsize=10, frameon=True,
+            framealpha=0.95, edgecolor="#CCCCCC",
+        )
 
-    fig.subplots_adjust(bottom=0.17, top=0.91)
+
+def plot_radar(node_nm):
+    N             = len(METRIC_KEYS)
+    angles        = np.linspace(0, 2 * np.pi, N, endpoint=False)
+    angles_closed = np.append(angles, angles[0])
+    full_circle   = np.linspace(0, 2 * np.pi, 300)
+
+    node_data = exp1[exp1["node_nm"] == node_nm]
+
+    # Gather all tech values for global normalization
+    tech_vals = {}
+    for tech in TECH_ORDER:
+        row = node_data[node_data["technology"] == tech]
+        if not row.empty:
+            vals = np.array([row[m].values[0] for m in METRIC_KEYS], dtype=float)
+            if not np.all(np.isnan(vals)):
+                tech_vals[tech] = vals
+
+    if not tech_vals:
+        return
+
+    # Global min/max across all technologies (makes panels comparable)
+    mins = np.array([
+        min((v[i] for v in tech_vals.values() if not np.isnan(v[i])), default=0.0)
+        for i in range(N)
+    ])
+    maxs = np.array([
+        max((v[i] for v in tech_vals.values() if not np.isnan(v[i])), default=1.0)
+        for i in range(N)
+    ])
+
+    fig = plt.figure(figsize=(14, 12), facecolor="white")
+    # Manual title — avoids suptitle fighting with set_position axes
+    fig.text(0.5, 0.97, f"PPA Radar  —  {node_nm} nm",
+             ha="center", va="top",
+             fontsize=20, fontweight="bold", color="#111111")
+
+    # [left, bottom, width, height] in figure fraction.
+    # Columns 0.02 apart so circles nearly touch horizontally.
+    # Row gap 0.08 — no per-subplot external legend, so no conflict.
+    pos = [
+        [0.02, 0.55, 0.47, 0.35],   # top-left  (SRAM)
+        [0.51, 0.55, 0.47, 0.35],   # top-right (eDRAM)
+        [0.02, 0.08, 0.47, 0.35],   # bot-left  (RRAM)
+        [0.51, 0.08, 0.47, 0.35],   # bot-right (STTRAM)
+    ]
+
+    for idx, (family_name, family_techs) in enumerate(RADAR_FAMILIES):
+        ax = fig.add_axes(pos[idx], projection="polar")
+        _draw_radar_panel(ax, family_techs, family_name, tech_vals,
+                          mins, maxs, angles, angles_closed, full_circle)
+
     save(fig, f"radar_{node_nm}nm.png")
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 3.  PPA SCATTER  —  2-panel: Volatile | Non-volatile
-# ─────────────────────────────────────────────────────────────────────────────
-LABEL_NODES = {22, 180}
-
-def _ppa_panel(ax, techs, panel_title):
-    """Draw one PPA panel for the given list of technologies."""
-    ax.set_facecolor("#FAFAFA")
-
-    for tech in techs:
-        sub = exp1[exp1["technology"] == tech].dropna(
-            subset=["read_latency_ns", "total_area_mm2"]
-        ).sort_values("node_nm", ascending=False)
-        if sub.empty:
-            continue
-
-        col  = TECH_COLOR[tech]
-        mks  = (sub["node_nm"] / max(NODE_ORDER) * 220 + 30).values
-
-        ax.plot(
-            sub["read_latency_ns"], sub["total_area_mm2"],
-            color=col, linewidth=2.6, linestyle=TECH_LS[tech],
-            label=TECH_LABEL[tech], zorder=3, alpha=0.90,
-            solid_capstyle="round", dash_capstyle="round",
-        )
-        ax.scatter(
-            sub["read_latency_ns"], sub["total_area_mm2"],
-            s=mks, c=col, marker=TECH_MARKER[tech],
-            edgecolors="white", linewidths=1.4,
-            zorder=4, alpha=0.95,
-        )
-
-        is_2d = tech.startswith("2D")
-        for _, row in sub[sub["node_nm"].isin(LABEL_NODES)].iterrows():
-            n  = int(row["node_nm"])
-            dy = 12 if is_2d else -14
-            dx = -30 if n == 22 else 6
-            ax.annotate(
-                f"{n} nm",
-                (row["read_latency_ns"], row["total_area_mm2"]),
-                textcoords="offset points", xytext=(dx, dy),
-                fontsize=8, color=col, fontweight="bold",
-                ha="right" if n == 22 else "left",
-            )
-
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.set_xlabel("Read Latency (ns)", fontsize=12, labelpad=6)
-    ax.set_ylabel("Total Area (mm²)", fontsize=12, labelpad=6)
-    ax.set_title(panel_title, fontsize=13, fontweight="bold", pad=10)
-    ax.legend(fontsize=9.5, framealpha=0.95,
-              edgecolor="#CCCCCC", loc="upper left")
-    ax.grid(True, which="major", linestyle="--",
-            linewidth=0.7, color="#CCCCCC", alpha=0.8)
-    ax.grid(False, which="minor")
-    for spine in ["top", "right"]:
-        ax.spines[spine].set_visible(False)
-    for spine in ["left", "bottom"]:
-        ax.spines[spine].set_color("#CCCCCC")
-        ax.spines[spine].set_linewidth(0.8)
-
-
-def plot_ppa_scatter():
-    fig, axes = plt.subplots(1, 2, figsize=(16, 6.5))
-    fig.patch.set_facecolor("white")
-    fig.suptitle(
-        "PPA Trade-off Space  —  Area vs. Read Latency  (log–log)\n"
-        "marker size proportional to process node  ·  solid = 2D  ·  dashed = 3D  "
-        "·  curves run 180 nm → 22 nm",
-        fontsize=13, fontweight="bold", y=1.02,
-    )
-
-    _ppa_panel(axes[0], VOLATILE,
-               "Volatile Memories  —  SRAM & eDRAM")
-    _ppa_panel(axes[1], NONVOLATILE,
-               "Non-volatile Memories  —  RRAM & STTRAM")
-
-    fig.tight_layout(rect=[0, 0, 1, 0.96])
-    save(fig, "ppa_scatter.png")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -435,15 +389,12 @@ def plot_ppa_scatter():
 if __name__ == "__main__":
     print(f"Output directory: {OUT_DIR}\n")
 
-    print("[1/3] Heatmaps...")
+    print("[1/2] Heatmaps...")
     plot_heatmap_combined()
     plot_heatmap_individual()
 
-    print("[2/3] Radar charts (22 nm, 45 nm, 90 nm)...")
+    print("[2/2] Radar charts (22 nm, 45 nm, 90 nm)...")
     for node in [22, 45, 90]:
         plot_radar(node)
-
-    print("[3/3] PPA scatter (Volatile | Non-volatile)...")
-    plot_ppa_scatter()
 
     print(f"\nDone.  All figures saved to:\n  {OUT_DIR}")
